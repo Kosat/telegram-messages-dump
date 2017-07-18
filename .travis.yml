@@ -1,0 +1,21 @@
+language: python
+python:
+  - "3.4"
+cache:
+ - pip
+before_install:
+- pip install -I telethon==0.11.5
+- pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
+install:
+- pyinstaller -D -F -n telegram-chat-dump -c telegram_chat_dump.py
+- pwd
+script: true
+deploy:
+  provider: releases
+  api_key:
+    secure: $GITHUB_API_KEY
+  file:
+    - "dist/telegram-chat-dump"
+  skip_cleanup: true
+  on:
+    tags: true
