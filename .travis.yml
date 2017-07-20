@@ -1,21 +1,35 @@
-language: python
-python:
-  - "3.4"
-cache:
- - pip
-before_install:
-- pip install -I telethon==0.11.5
-- pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
+matrix:
+    include:
+        - os: osx
+          language: generic
+        - os: linux
+          sudo: required
+          python: 3.6
+before_install: 
+
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then chmod ugo+x ./travis-scripts/pre_install.linux.sh; ./travis-scripts/pre_install.linux.sh ;fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ]; then   chmod ugo+x ./travis-scripts/pre_install.macos.sh; ./travis-scripts/pre_install.macos.sh ;fi
 install:
-- pyinstaller -D -F -n telegram-chat-dump -c telegram_chat_dump.py
-- pwd
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then chmod ugo+x ./travis-scripts/install.linux.sh; ./travis-scripts/install.linux.sh ;fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ]; then   chmod ugo+x ./travis-scripts/install.macos.sh; ./travis-scripts/install.macos.sh ;fi
 script: true
 deploy:
-  provider: releases
+- provider: releases
   api_key:
     secure: $GITHUB_API_KEY
   file:
-    - "dist/telegram-chat-dump"
+    - "dist/telegram_chat_dump_linux.tar.gz"
+    - "dist/telegram_chat_dump_windows.tar.gz"
   skip_cleanup: true
   on:
     tags: true
+    condition: $TRAVIS_OS_NAME = "linux"
+- provider: releases
+  api_key:
+    secure: $GITHUB_API_KEY
+  file:
+    - "dist/telegram_chat_dump_darwin.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME = "osx"
