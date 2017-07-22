@@ -21,4 +21,5 @@ Where:
 ```
 
 ## Notes
-This tool relies on [Telethon](https://github.com/LonamiWebs/Telethon) - a Telegram client implementation in Python.
+* This tool relies on [Telethon](https://github.com/LonamiWebs/Telethon) - a Telegram client implementation in Python.
+* Binaries for Linux, Windows and MacOS are available in [Releases](https://github.com/Kosat/telegram-messages-dump/releases) section.
