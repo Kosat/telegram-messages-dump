@@ -17,4 +17,4 @@ wine pyinstaller -n telegram-chat-dump.exe --onefile --clean --win-private-assem
 #Package for distribution
 cd ./dist
 tar -zcvf telegram_chat_dump_linux.tar.gz ./telegram-chat-dump
-tar -zcvf telegram_chat_dump_windows.tar.gz ./telegram-chat-dump.exe
+zip -r telegram_chat_dump_windows.zip ./telegram-chat-dump.exe

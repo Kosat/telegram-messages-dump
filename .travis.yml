@@ -19,7 +19,7 @@ deploy:
     secure: $GITHUB_API_KEY
   file:
     - "dist/telegram_chat_dump_linux.tar.gz"
-    - "dist/telegram_chat_dump_windows.tar.gz"
+    - "dist/telegram_chat_dump_windows.zip"
   skip_cleanup: true
   on:
     tags: true

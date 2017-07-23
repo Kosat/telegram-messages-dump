@@ -18,3 +18,6 @@ sudo apt update && sudo apt install winehq-stable
 #Install win32-python+pip+pyinstaller+telethon within wine
 wget "https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi"
 wine msiexec /i python-3.4.4.msi /quiet
+
+#Install zip for windows deployment
+sudo apt-get install zip
