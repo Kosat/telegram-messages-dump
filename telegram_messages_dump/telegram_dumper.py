@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import codecs
@@ -18,7 +21,7 @@ def sprint(string, *args, **kwargs):
         print(string, *args, **kwargs)
     except UnicodeEncodeError:
         string = string.encode('utf-8', errors='ignore') \
-                       .decode('ascii', errors='ignore')
+            .decode('ascii', errors='ignore')
         print(string, *args, **kwargs)
 
 
@@ -136,7 +139,7 @@ class TelegramDumper(TelegramClient):
         for i in range(0, 5):
             try:
                 total_count, messages, senders = self.get_message_history(
-                     peer, limit=100, offset_id=id_offset)
+                    peer, limit=100, offset_id=id_offset)
 
                 if total_count > 0 and len(messages) > 0:
                     print('Processing messages with ids {}-{} ...'.format(messages[0].id, messages[-1].id))
@@ -187,7 +190,8 @@ class TelegramDumper(TelegramClient):
         history_length = self.settings.limit if self.settings.limit > 0 else sys.maxsize
         file_path = self.settings.out_file
 
-        sprint('Dumping {} messages into "{}" file ...'.format('all' if history_length == sys.maxsize else history_length, file_path))
+        sprint('Dumping {} messages into "{}" file ...'.format('all' if history_length == sys.maxsize
+                                                               else history_length, file_path))
 
         msg_count_to_process = history_length
         id_offset = 0

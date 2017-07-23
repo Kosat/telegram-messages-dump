@@ -17,8 +17,10 @@ Where:
 """
 
 import os
-from chat_dump_settings import ChatDumpSettings
-from telegram_dumper import TelegramDumper
+
+from telegram_messages_dump.telegram_dumper import TelegramDumper
+
+from telegram_messages_dump.chat_dump_settings import ChatDumpSettings
 
 
 def main():

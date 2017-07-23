@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import argparse
 
 
@@ -37,7 +40,7 @@ class CustomArgumentParser(argparse.ArgumentParser):
         return formatter.format_help()
 
 
-class ChatDumpSettings():
+class ChatDumpSettings:
     """ Parses arguments.
     """
 

@@ -1,0 +1,10 @@
+exclude .gitignore
+exclude .coverage
+exclude .travis.yml
+include README.md
+exclude setup.cfg
+prune .cache
+prune .git
+prune build
+prune dist
+prune travis-scripts

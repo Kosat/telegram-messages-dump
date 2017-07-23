@@ -3,6 +3,19 @@
 [![Build Status](https://travis-ci.org/Kosat/telegram-messages-dump.svg?branch=master)](https://travis-ci.org/Kosat/telegram-messages-dump)
 
 This is a simple console tool for dumping message history from a Telegram chat into a plain text file. 
+## Installation
+**From sources:**
+```
+git clone https://github.com/Kosat/telegram-messages-dump.git
+cd telegram-messages-dump
+python setup.py install
+telegram-messages-dump
+or
+python -m telegram_messages_dump
+```
+**Binaries:**
+
+Binaries for Linux, Windows and MacOS are available in [Releases](https://github.com/Kosat/telegram-messages-dump/releases) section.
 
 ## Usage
 
@@ -22,4 +35,3 @@ Where:
 
 ## Notes
 * This tool relies on [Telethon](https://github.com/LonamiWebs/Telethon) - a Telegram client implementation in Python.
-* Binaries for Linux, Windows and MacOS are available in [Releases](https://github.com/Kosat/telegram-messages-dump/releases) section.
