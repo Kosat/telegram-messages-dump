@@ -34,4 +34,10 @@ Where:
 ```
 
 ## Notes
+
 * This tool relies on [Telethon](https://github.com/LonamiWebs/Telethon) - a Telegram client implementation in Python.
+
+
+## License
+
+This project is licensed under the [MIT license](LICENSE).
