@@ -1,5 +1,5 @@
 # Telegram Messages Dump 
-
+[![GitHub version](https://badge.fury.io/gh/Kosat%2Ftelegram-messages-dump.svg)](https://github.com/Kosat/telegram-messages-dump/releases)
 [![Build Status](https://travis-ci.org/Kosat/telegram-messages-dump.svg?branch=master)](https://travis-ci.org/Kosat/telegram-messages-dump)
 
 This is a simple console tool for dumping message history from a Telegram chat into a plain text file. 
