@@ -9,7 +9,7 @@ pip install -I telethon==0.11.5
 pyinstaller -D -F -n telegram-chat-dump -c ./telegram_messages_dump/run.py
 
 
-#Build for Windows
+#Setup build env for Windows: pyinstaller+telethon
 wine pip install -I telethon==0.11.5
 wine pip install pyinstaller
 wine pyinstaller -n telegram-chat-dump.exe --onefile --clean --win-private-assemblies -c --noconfirm --log-level=WARN ./telegram_messages_dump/run.py
