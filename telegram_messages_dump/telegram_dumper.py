@@ -9,9 +9,9 @@ from collections import deque
 from getpass import getpass
 from time import sleep
 
-from telethon import TelegramClient
+from telethon import TelegramClient, ConnectionMode
 from telethon.errors import SessionPasswordNeededError
-from telethon.errors.rpc_errors_420 import FloodWaitError
+from telethon.errors.rpc_error_list import FloodWaitError
 from telethon.tl.functions.contacts import ResolveUsernameRequest
 
 
@@ -30,10 +30,12 @@ class TelegramDumper(TelegramClient):
         Retrieves message history for a chat.
     """
 
+
+
     def __init__(self, session_user_id, settings):
 
         sprint('Initializing session...')
-        super().__init__(session_user_id, settings.api_id, settings.api_hash, None)
+        super().__init__(session_user_id, settings.api_id, settings.api_hash, connection_mode=ConnectionMode.TCP_FULL, proxy=None,     update_workers=1)
 
         self.settings = settings
         self.init_connect()
@@ -90,7 +92,8 @@ class TelegramDumper(TelegramClient):
         sprint('{} messages were successfully written in resulting file. Done!'.format(count))
 
     @staticmethod
-    def extract_message_data(msg, sender):
+    def extract_message_data(msg):
+        sender = msg.sender
         """ Extracts user name from 'sender', message caption and message content from msg."""
         # Get the name of the sender if any
         if sender:
@@ -132,16 +135,16 @@ class TelegramDumper(TelegramClient):
                 id_offset - the id of the last message retrieved
         """
         messages = []
-        senders = []
+        #senders = []
 
         # First retrieve the messages and some information
         # make 5 attempts
         for i in range(0, 5):
             try:
-                total_count, messages, senders = self.get_message_history(
+                messages = self.get_message_history(
                     peer, limit=100, offset_id=id_offset)
-
-                if total_count > 0 and len(messages) > 0:
+                
+                if messages.total > 0 and len(messages) > 0:
                     print('Processing messages with ids {}-{} ...'.format(messages[0].id, messages[-1].id))
             except FloodWaitError as ex:
                 sprint('FloodWaitError detected. Sleep for {} sec before reconnecting! \n'.format(ex.seconds))
@@ -153,9 +156,9 @@ class TelegramDumper(TelegramClient):
         # Iterate over all (in reverse order so the latest appear
         # the last in the console) and print them with format:
         # "[yyyy-mm-dd hh:mm] Sender: Message RE:"
-        for msg, sender in zip(messages, senders):
+        for msg in messages:
 
-            name, caption, content = self.extract_message_data(msg, sender)
+            name, caption, content = self.extract_message_data(msg)
 
             re_id_str = ''
             if hasattr(msg, 'reply_to_msg_id') and msg.reply_to_msg_id is not None:

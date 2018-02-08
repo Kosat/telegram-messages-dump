@@ -9,7 +9,7 @@ setup(
     author_email='kostikkv@gmail.com',
     url='https://github.com/Kosat/telegram-messages-dump',
     download_url='https://github.com/Kosat/telegram-messages-dump/releases',
-    install_requires=['telethon'],
+    install_requires=['telethon==0.17'],
     packages=['telegram_messages_dump'],
     classifiers=[
         'Environment :: Console',
