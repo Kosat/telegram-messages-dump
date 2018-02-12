@@ -32,6 +32,7 @@ Where:
     -cl, --clean  Clean session sensitive data (e.g. auth token) on exit. (Default: False)
     -h,  --help   Show this help message and exit.
 ```
+![telegram-dump-gif](https://user-images.githubusercontent.com/153023/36110898-fda2e7f6-102c-11e8-9475-471063004be8.gif)
 
 ## Notes
 
