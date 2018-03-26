@@ -143,7 +143,7 @@ class TelegramDumper(TelegramClient):
             try:
                 messages = self.get_message_history(
                     peer, limit=100, offset_id=id_offset)
-                
+
                 if messages.total > 0 and len(messages) > 0:
                     print('Processing messages with ids {}-{} ...'.format(messages[0].id, messages[-1].id))
             except FloodWaitError as ex:
@@ -212,7 +212,7 @@ class TelegramDumper(TelegramClient):
                                                                             id_offset, buffer)
             # when buffer is full, flush it into a temp file
             if len(buffer) >= 1000:
-                with tempfile.TemporaryFile(mode='w+', encoding='utf-8', delete=False) as tf:
+                with tempfile.NamedTemporaryFile(mode='w+', encoding='utf-8', delete=False) as tf:
                     tf.write(codecs.BOM_UTF8.decode())
                     while len(buffer) > 0:
                         output_total_count += 1
