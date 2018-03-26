@@ -102,3 +102,9 @@ ENV/
 
 # PyCharm files
 .idea
+
+# Log files
+telegram_*.log
+
+# Session data
+run.py.session
