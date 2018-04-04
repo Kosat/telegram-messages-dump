@@ -44,7 +44,6 @@ def _load_exporter(exporter_name):
     exporter_file_name = exporter_name + ".py"
     exporters_full_path = os.path.join(exporters_full_dir, exporter_file_name)
     # Check if .\exporters\<exp_name>.py file exists
-    print(exporters_full_path)
     if not os.path.isfile(exporters_full_path):
         raise ValueError("Could not find exporter '"
                          + "./" + exporters_subdir + "/"
