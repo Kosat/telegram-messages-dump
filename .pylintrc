@@ -1,0 +1,7 @@
+﻿# -*- coding: utf-8 -*-
+
+[MESSAGES CONTROL]
+
+disable=
+  C0103, # Snake-case variable name
+
