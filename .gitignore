@@ -102,3 +102,7 @@ ENV/
 
 # PyCharm files
 .idea
+
+# Session temp files from Telethon
+**/*.session
+**/*.log
