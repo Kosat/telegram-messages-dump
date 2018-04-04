@@ -10,7 +10,7 @@ setup(
     url='https://github.com/Kosat/telegram-messages-dump',
     download_url='https://github.com/Kosat/telegram-messages-dump/releases',
     install_requires=['telethon==0.17'],
-    packages=['telegram_messages_dump'],
+    packages=['telegram_messages_dump', "telegram_messages_dump.exporters"],
     classifiers=[
         'Environment :: Console',
         'Intended Audience :: Developers',
@@ -26,5 +26,3 @@ setup(
             ['telegram-messages-dump = telegram_messages_dump.run:main']
     }
 )
-
-#
