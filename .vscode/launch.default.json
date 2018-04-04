@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: debug main",
+            "type": "python",
+            "request": "launch",
+            "module": "telegram_messages_dump",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-c@<chat_name>",
+                "-p<phone_number>",
+                "-o<path_to_output_file>",
+                "-e text",
+                "-l 100"
+            ],
+            "debugOptions": [
+                "RedirectOutput"
+            ]
+        }
+    ]
+}
