@@ -19,8 +19,8 @@ deploy:
   api_key:
     secure: $GITHUB_API_KEY
   file:
-    - "dist/telegram_chat_dump_linux.tar.gz"
-    - "dist/telegram_chat_dump_windows.zip"
+    - "dist/telegram_messages_dump_linux.tar.gz"
+    - "dist/telegram_messages_dump_windows.zip"
   skip_cleanup: true
   on:
     tags: true
@@ -29,7 +29,7 @@ deploy:
   api_key:
     secure: $GITHUB_API_KEY
   file:
-    - "dist/telegram_chat_dump_darwin.tar.gz"
+    - "dist/telegram_messages_dump_darwin.tar.gz"
   skip_cleanup: true
   on:
     tags: true
