@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+""" This Module contains classes related to CLI interactions"""
 import argparse
 
 
 class CustomFormatter(argparse.HelpFormatter):
     """ Custom formatter for setting argparse formatter_class.
-        It only outputs raw 'usage' text and omits other sections (e.g. positional, optional params and epilog).
+        It only outputs raw 'usage' text and omits other sections
+        (e.g. positional, optional params and epilog).
     """
 
     def __init__(self, prog=''):
@@ -40,11 +41,12 @@ class CustomArgumentParser(argparse.ArgumentParser):
         return formatter.format_help()
 
 
-class ChatDumpSettings:
-    """ Parses arguments.
-    """
 
-    # noinspection PyBroadException
+class ChatDumpSettings:
+    """ Parses CLI arguments. """
+
+    # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-few-public-methods
     def __init__(self, usage):
 
         # From telegram-cli
@@ -59,6 +61,7 @@ class ChatDumpSettings:
         parser.add_argument('-l', '--limit', default=100, type=int)
         parser.add_argument('-o', '--out', default='', type=str)
         parser.add_argument('-cl', '--clean', action='store_true')
+        parser.add_argument('-e', '--exp', default='text', type=str)
 
         args = parser.parse_args()
 
@@ -70,9 +73,9 @@ class ChatDumpSettings:
 
         # Validate phone number
         try:
-            if not int(args.phone) > 0:
+            if int(args.phone) <= 0:
                 raise ValueError
-        except:
+        except ValueError:
             parser.error('Phone number is invalid.')
 
         # Validate phone number
@@ -82,20 +85,24 @@ class ChatDumpSettings:
         # Validate output file
         out_file = 'telegram_{}.log'.format(args.chat)
 
-        if len(args.out) > 0:
+        if args.out:
             out_file = args.out
 
         try:
             with open(out_file, mode='w+'):
                 pass
-        except BaseException as ex:
-            if hasattr(ex, 'strerror'):
-                parser.error('Output file path "{}" is invalid. {}'.format(out_file, ex.strerror))
-            else:
-                parser.error('Output file path "{}" is invalid.'.format(out_file))
+        except OSError as ex:
+            parser.error('Output file path "{}" is invalid. {}'.format(out_file, ex.strerror))
+
+
+        # Validate exporter name
+        exp_file = args.exp.strip()
+        if not exp_file:
+            parser.error('Exporter name is invalid.')
 
         self.chat_name = args.chat
         self.phone_num = args.phone
         self.out_file = out_file
         self.limit = args.limit
         self.is_clean = args.clean
+        self.exporter = exp_file
