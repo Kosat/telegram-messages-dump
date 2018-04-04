@@ -1,3 +1,4 @@
+language: python
 matrix:
     include:
         - os: osx
@@ -5,7 +6,7 @@ matrix:
         - os: linux
           sudo: required
           python: 3.6
-before_install: 
+before_install:
 
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then chmod ugo+x ./travis-scripts/pre_install.linux.sh; ./travis-scripts/pre_install.linux.sh ;fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then   chmod ugo+x ./travis-scripts/pre_install.macos.sh; ./travis-scripts/pre_install.macos.sh ;fi
