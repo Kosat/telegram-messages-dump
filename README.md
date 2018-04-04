@@ -5,13 +5,19 @@
 This is a simple console tool for dumping message history from a Telegram chat into a plain text file. 
 ## Installation
 **From sources:**
+Fetch the latest sources with git:
 ```
 git clone https://github.com/Kosat/telegram-messages-dump.git
+```
+Then run directly from sources
+```
 cd telegram-messages-dump
+python -m telegram_messages_dump
+```
+Or run after installing locally
+```
 python setup.py install
 telegram-messages-dump
-or
-python -m telegram_messages_dump
 ```
 **Binaries:**
 
@@ -50,7 +56,8 @@ Basically an exporter is a class that implements three methods:
 
 To use a custom exporter. Place you `.py` file with a class implementing those 3 methods into `./exporters` subfolder and specify its name in `--exp <exporter_name>` setting. 
 
->Note: the class name **MUST** exactly match the file name of its `.py` file. This very same name is used as an argument for the `--exp` setting. 
+>Note: the class name **MUST** exactly match the file name of its `.py` file. This very same name is used as an argument for the `--exp` setting.
+
 >Note2: in `.vscode` subfolder you can find the default settings that I use for debugging this project.  
 
 ## License
