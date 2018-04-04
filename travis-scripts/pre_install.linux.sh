@@ -4,6 +4,9 @@ echo Start executing pre_install.linux.sh
 echo pwd
 pwd
 
+# Print out current python env
+python -V
+
 # Upgrade pip
 python -m pip install --upgrade pip
 
