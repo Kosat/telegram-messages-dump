@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Install telethon:
-pip3 install -I telethon==0.11.5
+pip3 install -I telethon==0.17
 pyinstaller -n telegram-chat-dump --noconsole --onefile ./telegram_messages_dump/run.py
 
 #Package for distribution

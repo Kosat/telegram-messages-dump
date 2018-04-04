@@ -5,12 +5,12 @@ echo pwd
 pwd
 
 #Build for Linux
-pip install -I telethon==0.11.5
+pip install -I telethon==0.17
 pyinstaller -D -F -n telegram-chat-dump -c ./telegram_messages_dump/run.py
 
 
 #Setup build env for Windows: pyinstaller+telethon
-wine pip install -I telethon==0.11.5
+wine pip install -I telethon==0.17
 wine pip install pyinstaller
 wine pyinstaller -n telegram-chat-dump.exe --onefile --clean --win-private-assemblies -c --noconfirm --log-level=WARN ./telegram_messages_dump/run.py
 

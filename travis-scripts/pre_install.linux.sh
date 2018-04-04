@@ -4,6 +4,9 @@ echo Start executing pre_install.linux.sh
 echo pwd
 pwd
 
+# Upgrade pip
+python -m pip install --upgrade pip
+
 #Build for Linux
 pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
 
