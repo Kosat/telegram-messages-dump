@@ -30,6 +30,7 @@ Where:
     -l,  --limit  Number of the latest messages to dump, 0 means no limit. (Default: 100)
     -o,  --out    Output file name or full path. (Default: telegram_<chatName>.log)
     -cl, --clean  Clean session sensitive data (e.g. auth token) on exit. (Default: False)
+    -e,  --exp    Exporter name. text | json (Default: 'text')
     -h,  --help   Show this help message and exit.
 ```
 ![telegram-dump-gif](https://user-images.githubusercontent.com/153023/36110898-fda2e7f6-102c-11e8-9475-471063004be8.gif)
@@ -38,6 +39,19 @@ Where:
 
 * This tool relies on [Telethon](https://github.com/LonamiWebs/Telethon) - a Telegram client implementation in Python.
 
+## Plugins
+
+Output format is managed by *exporter* plugins. Currently there are two exporters available: **text** and **json**.
+Exporters reside in `./exporters` subfolder. 
+Basically an exporter is a class that implements three methods:
+- `format(...)` that extracts all necessary data from a message and stringifies it.
+- `begin_final_file(...)` that allows an exporter to write a preamble to a resulting output file.
+- `end_final_file(...)` that allows an exporter to write an afterword to a resulting output file.
+
+To use a custom exporter. Place you `.py` file with a class implementing those 3 methods into `./exporters` subfolder and specify its name in `--exp <exporter_name>` setting. 
+
+>Note: the class name **MUST** exactly match the file name of its `.py` file. This very same name is used as an argument for the `--exp` setting. 
+>Note2: in `.vscode` subfolder you can find the default settings that I use for debugging this project.  
 
 ## License
 
