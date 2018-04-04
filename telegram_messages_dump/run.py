@@ -12,7 +12,7 @@ Where:
     -l,  --limit  Number of the latest messages to dump, 0 means no limit. (Default: 100)
     -o,  --out    Output file name or full path. (Default: telegram_<chatName>.log)
     -cl, --clean  Clean session sensitive data (e.g. auth token) on exit. (Default: False)
-    -e,  --exp    Exporter name. (Default: 'text')
+    -e,  --exp    Exporter name. text | json (Default: 'text')
     -h,  --help   Show this help message and exit.
 
 """
