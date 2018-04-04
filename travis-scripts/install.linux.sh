@@ -6,7 +6,10 @@ pwd
 
 #Build for Linux
 pip install -I telethon==0.17
-pyinstaller -D -F -n telegram-chat-dump -c ./telegram_messages_dump/run.py
+pyinstaller -D -F -n telegram-messages-dump \
+-c ./telegram_messages_dump/run.py \
+--hidden-import telegram_messages_dump.exporters.text \
+--hidden-import telegram_messages_dump.exporters.json
 
 
 #Setup build env for Windows: pyinstaller+telethon
@@ -16,5 +19,5 @@ pyinstaller -D -F -n telegram-chat-dump -c ./telegram_messages_dump/run.py
 
 #Package for distribution
 cd ./dist
-tar -zcvf telegram_chat_dump_linux.tar.gz ./telegram-chat-dump
+tar -zcvf telegram_messages_dump_linux.tar.gz ./telegram-messages-dump
 # zip -r telegram_chat_dump_windows.zip ./telegram-chat-dump.exe

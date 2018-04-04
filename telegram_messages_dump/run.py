@@ -38,16 +38,8 @@ def _load_exporter(exporter_name):
         :return: Exporter instance
     """
     # By convention exporters are located in .\exporters subfolder
-    exporters_subdir = "exporters"
-    # Full path to .\exporters subfolder
-    exporters_full_dir = os.path.join(os.path.dirname(__file__), exporters_subdir)
+    # COMMENT: Don't check file existance. It won't play well with with pyinstaller bins
     exporter_file_name = exporter_name + ".py"
-    exporters_full_path = os.path.join(exporters_full_dir, exporter_file_name)
-    # Check if .\exporters\<exp_name>.py file exists
-    if not os.path.isfile(exporters_full_path):
-        raise ValueError("Could not find exporter '"
-                         + "./" + exporters_subdir + "/"
-                         + exporter_file_name + "'")
     exporter_rel_name = "telegram_messages_dump.exporters." + exporter_name
     # Load exporter from file
     sprint("Try to load exporter '%s'...  " % (exporter_file_name), end='')
