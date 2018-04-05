@@ -33,6 +33,9 @@ class TelegramDumper(TelegramClient):
 
         self.settings = settings
         self.exporter = exporter
+        self.exporter_context = ExporterContext()
+        self.msg_count_to_process = 0
+        self.id_offset = 0
         self.init_connect()
 
     def init_connect(self):
@@ -87,7 +90,7 @@ class TelegramDumper(TelegramClient):
 
         sprint('{} messages were successfully written in resulting file. Done!'.format(count))
 
-    def retrieve_message_history(self, peer, msg_count, id_offset, buffer):
+    def retrieve_message_history(self, peer, buffer):
         """ Retrieves a number (100) of messages from Telegram's DC and adds them to 'buffer'.
             :param peer:        Chat/Channel object
             :param msg_count:   number of messages to process
@@ -105,7 +108,7 @@ class TelegramDumper(TelegramClient):
         for _ in range(0, 5):
             try:
                 messages = self.get_message_history(
-                    peer, limit=100, offset_id=id_offset)
+                    peer, limit=100, offset_id=self.id_offset)
 
                 if messages.total > 0 and messages:
                     sprint('Processing messages with ids {}-{} ...'
@@ -118,21 +121,22 @@ class TelegramDumper(TelegramClient):
                 continue
             break
 
+
         # Iterate over all (in reverse order so the latest appear
         # the last in the console) and print them with format provided by exporter.
         for msg in messages:
-
-            msg_dump_str = self.exporter.format(msg)
+            self.exporter_context.is_first_record = True if self.msg_count_to_process == 1 else False
+            msg_dump_str = self.exporter.format(msg, self.exporter_context)
 
             buffer.append(msg_dump_str)
 
-            msg_count -= 1
-            id_offset = msg.id
-
-            if msg_count == 0:
+            self.msg_count_to_process -= 1
+            self.id_offset = msg.id
+            self.exporter_context.is_last_record = False
+            if self.msg_count_to_process == 0:
                 break
 
-        return msg_count, id_offset
+        return
 
     def dump_messages_in_file(self, peer):
         """ Retrieves messages in small chunks (Default: 100) and saves them in in-memory 'buffer'.
@@ -151,8 +155,8 @@ class TelegramDumper(TelegramClient):
         sprint('Dumping {} messages into "{}" file ...'
                .format('all' if history_length == sys.maxsize else history_length, file_path))
 
-        msg_count_to_process = history_length
-        id_offset = 0
+        self.msg_count_to_process = history_length
+        self.id_offset = 0
         output_total_count = 0
 
         # buffer to save a bulk of messages before flushing them to a file
@@ -161,12 +165,9 @@ class TelegramDumper(TelegramClient):
 
         # process messages until either all message count requested by user are retrieved
         # or offset_id reaches msg_id=1 - the head of a channel message history
-        while msg_count_to_process > 0:
+        while self.msg_count_to_process > 0:
             sleep(2)  # slip for a few seconds to avoid flood ban
-            msg_count_to_process, id_offset = self.retrieve_message_history(peer,
-                                                                            msg_count_to_process,
-                                                                            id_offset,
-                                                                            buffer)
+            self.retrieve_message_history(peer, buffer)
             # when buffer is full, flush it into a temp file
             if len(buffer) >= 1000:
                 with tempfile.NamedTemporaryFile(mode='w+', encoding='utf-8', delete=False) as tf:
@@ -177,7 +178,7 @@ class TelegramDumper(TelegramClient):
                     temp_files_list.append(tf)
 
             # break if the very beginning of channel history is reached
-            if id_offset <= 1:
+            if self.id_offset <= 1:
                 break
 
         # Write all chunks into resulting file
@@ -203,3 +204,15 @@ class TelegramDumper(TelegramClient):
             self.exporter.end_final_file(resulting_file)
 
         return output_total_count
+
+
+class ExporterContext:
+    """ Exporter context """
+
+    # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-few-public-methods
+    def __init__(self):
+        # Is processing the first record
+        self.is_first_record = False
+        # Is processing the last record
+        self.is_last_record = True

@@ -17,7 +17,7 @@ class json(object):
         """ constructor """
         pass
 
-    def format(self, msg):
+    def format(self, msg, exporter_context):
         """ Formatter method. Takes raw msg and converts it to a *one-line* string.
             :param msg: Raw message object :class:`telethon.tl.types.Message` and derivatives.
                         https://core.telegram.org/type/Message
@@ -40,8 +40,10 @@ class json(object):
         }
         msg_dump_str = jsonStd.dumps(
             msgDictionary, default=self._json_serial, ensure_ascii=False)
-
-        return msg_dump_str
+        if exporter_context.is_last_record:
+            return msg_dump_str
+        else:
+            return msg_dump_str + ","
 
     def begin_final_file(self, resulting_file):
         """ Hook executes at the beginning of writing a resulting file. (After BOM is written)"""
