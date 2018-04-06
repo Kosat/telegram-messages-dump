@@ -36,7 +36,7 @@ Where:
     -l,  --limit  Number of the latest messages to dump, 0 means no limit. (Default: 100)
     -o,  --out    Output file name or full path. (Default: telegram_<chatName>.log)
     -cl, --clean  Clean session sensitive data (e.g. auth token) on exit. (Default: False)
-    -e,  --exp    Exporter name. text | json (Default: 'text')
+    -e,  --exp    Exporter name. text | json | csv (Default: 'text')
     -h,  --help   Show this help message and exit.
 ```
 ![telegram-dump-gif](https://user-images.githubusercontent.com/153023/36110898-fda2e7f6-102c-11e8-9475-471063004be8.gif)
@@ -47,7 +47,7 @@ Where:
 
 ## Plugins
 
-Output format is managed by *exporter* plugins. Currently there are two exporters available: **text** and **json**.
+Output format is managed by *exporter* plugins. Currently there are two exporters available: **text**,**json** and **csv**.
 Exporters reside in `./exporters` subfolder. 
 Basically an exporter is a class that implements three methods:
 - `format(...)` that extracts all necessary data from a message and stringifies it.
