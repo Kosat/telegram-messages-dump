@@ -44,7 +44,7 @@ class csv(object):
                                  msg.date.isoformat(),
                                  name,
                                  str(re_id),
-                                 '"' + self._py_encode_basestring(content) + '"'])
+                                 '"' + str(self._py_encode_basestring(content)) + '"'])
         return msg_dump_str
 
     def begin_final_file(self, resulting_file):

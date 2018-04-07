@@ -15,7 +15,7 @@ pyinstaller -D -F -n telegram-messages-dump \
 #Setup build env for Windows: pyinstaller+telethon
 # wine pip install -I telethon==0.17
 # wine pip install pyinstaller
-# wine pyinstaller -n telegram-messages-dump.exe --onefile --clean --win-private-assemblies -c --noconfirm --log-level=WARN ./telegram_messages_dump/run.py --hidden-import telegram_messages_dump.exporters.text --hidden-import telegram_messages_dump.exporters.json
+# wine pyinstaller -n telegram-messages-dump.exe --onefile --clean --win-private-assemblies -c --noconfirm --log-level=WARN ./telegram_messages_dump/run.py --hidden-import telegram_messages_dump.exporters.text --hidden-import telegram_messages_dump.exporters.json --hidden-import telegram_messages_dump.exporters.csv
 
 #Package for distribution
 cd ./dist
