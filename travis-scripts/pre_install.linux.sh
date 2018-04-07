@@ -17,9 +17,12 @@ pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
 
 #Install wine from their PPA
 # sudo dpkg --add-architecture i386
+# sudo apt-get install software-properties-common
 # sudo apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/'
 # wget https://dl.winehq.org/wine-builds/Release.key && sudo apt-key add Release.key
-# sudo apt update && sudo apt install winehq-stable
+# apt-get install apt-transport-https
+# sudo apt-get update
+# sudo apt-get install --install-recommends winehq-stable
 
 #Install win32-python+pip within wine
 # wget "https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi"
