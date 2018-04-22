@@ -46,9 +46,11 @@ class jsonl(object):
         return msg_dump_str
 
     def begin_final_file(self, resulting_file):
+        """ Hook executes at the beginning of writing a resulting file. (After BOM is written)"""
         pass
 
     def end_final_file(self, resulting_file):
+        """ Hook executes at the end of writing a resulting file. Right before closing it."""
         pass
 
     def _json_serial(self, obj):

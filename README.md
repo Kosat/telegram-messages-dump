@@ -2,7 +2,7 @@
 [![GitHub version](https://badge.fury.io/gh/Kosat%2Ftelegram-messages-dump.svg)](https://github.com/Kosat/telegram-messages-dump/releases)
 [![Build Status](https://travis-ci.org/Kosat/telegram-messages-dump.svg?branch=master)](https://travis-ci.org/Kosat/telegram-messages-dump)
 
-This is a simple console tool for dumping message history from a Telegram chat into a __json__, __csv__ or plain text file. 
+This is a simple console tool for dumping message history from a Telegram chat into a __jsonl__, __csv__ or plain text file. 
 ## Installation
 **From sources:**
 Fetch the latest sources with git:
@@ -36,7 +36,7 @@ Where:
     -l,  --limit  Number of the latest messages to dump, 0 means no limit. (Default: 100)
     -o,  --out    Output file name or full path. (Default: telegram_<chatName>.log)
     -cl, --clean  Clean session sensitive data (e.g. auth token) on exit. (Default: False)
-    -e,  --exp    Exporter name. text | json | csv (Default: 'text')
+    -e,  --exp    Exporter name. text | jsonl | csv (Default: 'text')
     -h,  --help   Show this help message and exit.
 ```
 ![telegram-dump-gif](https://user-images.githubusercontent.com/153023/36110898-fda2e7f6-102c-11e8-9475-471063004be8.gif)
@@ -47,7 +47,7 @@ Where:
 
 ## Plugins
 
-Output format is managed by *exporter* plugins. Currently there are two exporters available: **text**,**json** and **csv**.
+Output format is managed by *exporter* plugins. Currently there are two exporters available: **text**,**jsonl** and **csv**.
 Exporters reside in `./exporters` subfolder. 
 Basically an exporter is a class that implements three methods:
 - `format(...)` that extracts all necessary data from a message and stringifies it.
