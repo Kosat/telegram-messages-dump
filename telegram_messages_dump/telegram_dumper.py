@@ -190,7 +190,6 @@ class TelegramDumper(TelegramClient):
                 if len(buffer) >= 1000:
                     with tempfile \
                          .NamedTemporaryFile(mode='w+', encoding='utf-8', delete=False) as tf:
-                        tf.write(codecs.BOM_UTF8.decode())
                         while buffer:
                             output_total_count += 1
                             print(buffer.pop(), file=tf)
@@ -206,7 +205,8 @@ class TelegramDumper(TelegramClient):
         # Write all chunks into resulting file
         sprint('Merging results into an output file.')
         with codecs.open(file_path, 'w', 'utf-8') as resulting_file:
-            resulting_file.write(codecs.BOM_UTF8.decode())
+            if self.settings.is_addbom:
+                resulting_file.write(codecs.BOM_UTF8.decode())
 
             self.exporter.begin_final_file(resulting_file)
 

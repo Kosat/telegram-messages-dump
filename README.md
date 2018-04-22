@@ -37,7 +37,8 @@ Where:
     -o,  --out      Output file name or full path. (Default: telegram_<chatName>.log)
     -cl, --clean    Clean session sensitive data (e.g. auth token) on exit. (Default: False)
     -e,  --exp      Exporter name. text | jsonl | csv (Default: 'text')
-    -v,  --verbose  Verbose mode
+    -v,  --verbose  Verbose mode. (Default: False)
+      ,  --addbom   Add BOM to the beginning of the output file. (Default: False)
     -h,  --help     Show this help message and exit.
 ```
 ![telegram-dump-gif](https://user-images.githubusercontent.com/153023/36110898-fda2e7f6-102c-11e8-9475-471063004be8.gif)
