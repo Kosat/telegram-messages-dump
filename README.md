@@ -31,13 +31,14 @@ Mandatory parameters are <chat_name> e.g. @Python or @CSharp and <phone_num> - a
 telegram-messages-dump -c <@chat_name> -p <phone_num> [-l <count>] [-o <file>] [-cl]
 
 Where:
-    -c,  --chat   Unique name of a channel/chat. E.g. @python.
-    -p,  --phone  Phone number. E.g. +380503211234.
-    -l,  --limit  Number of the latest messages to dump, 0 means no limit. (Default: 100)
-    -o,  --out    Output file name or full path. (Default: telegram_<chatName>.log)
-    -cl, --clean  Clean session sensitive data (e.g. auth token) on exit. (Default: False)
-    -e,  --exp    Exporter name. text | jsonl | csv (Default: 'text')
-    -h,  --help   Show this help message and exit.
+    -c,  --chat     Unique name of a channel/chat. E.g. @python.
+    -p,  --phone    Phone number. E.g. +380503211234.
+    -l,  --limit    Number of the latest messages to dump, 0 means no limit. (Default: 100)
+    -o,  --out      Output file name or full path. (Default: telegram_<chatName>.log)
+    -cl, --clean    Clean session sensitive data (e.g. auth token) on exit. (Default: False)
+    -e,  --exp      Exporter name. text | jsonl | csv (Default: 'text')
+    -v,  --verbose  Verbose mode
+    -h,  --help     Show this help message and exit.
 ```
 ![telegram-dump-gif](https://user-images.githubusercontent.com/153023/36110898-fda2e7f6-102c-11e8-9475-471063004be8.gif)
 

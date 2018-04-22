@@ -23,6 +23,7 @@ class ChatDumpSettings:
         parser.add_argument('-o', '--out', default='', type=str)
         parser.add_argument('-cl', '--clean', action='store_true')
         parser.add_argument('-e', '--exp', default='text', type=str)
+        parser.add_argument('-v', '--verbose', action='store_true')
 
         args = parser.parse_args()
 
@@ -67,6 +68,7 @@ class ChatDumpSettings:
         self.limit = args.limit
         self.is_clean = args.clean
         self.exporter = exp_file
+        self.is_verbose = args.verbose
 
 
 class CustomFormatter(argparse.HelpFormatter):

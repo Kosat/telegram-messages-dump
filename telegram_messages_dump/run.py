@@ -7,18 +7,19 @@ Usage:
 telegram-messages-dump -c <@chat_name> -p <phone_num> [-l <count>] [-o <file>] [-cl]
 
 Where:
-    -c,  --chat   Unique name of a channel/chat. E.g. @python.
-    -p,  --phone  Phone number. E.g. +380503211234.
-    -l,  --limit  Number of the latest messages to dump, 0 means no limit. (Default: 100)
-    -o,  --out    Output file name or full path. (Default: telegram_<chatName>.log)
-    -cl, --clean  Clean session sensitive data (e.g. auth token) on exit. (Default: False)
-    -e,  --exp    Exporter name. text | jsonl | csv (Default: 'text')
-    -h,  --help   Show this help message and exit.
-
+    -c,  --chat      Unique name of a channel/chat. E.g. @python.
+    -p,  --phone     Phone number. E.g. +380503211234.
+    -l,  --limit     Number of the latest messages to dump, 0 means no limit. (Default: 100)
+    -o,  --out       Output file name or full path. (Default: telegram_<chatName>.log)
+    -cl, --clean     Clean session sensitive data (e.g. auth token) on exit. (Default: False)
+    -e,  --exp       Exporter name. text | jsonl | csv (Default: 'text')
+    -v,  --verbose   Verbose mode.
+    -h,  --help      Show this help message and exit.
 """
 
 import os
 import importlib
+import logging
 from telegram_messages_dump.telegram_dumper import TelegramDumper
 from telegram_messages_dump.chat_dump_settings import ChatDumpSettings
 from telegram_messages_dump.utils import sprint
@@ -26,6 +27,8 @@ from telegram_messages_dump.utils import sprint
 def main():
     """ Entry point. """
     settings = ChatDumpSettings(__doc__)
+    if settings.is_verbose:
+        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
     exporter = _load_exporter(settings.exporter)
 
@@ -38,7 +41,7 @@ def _load_exporter(exporter_name):
         :return: Exporter instance
     """
     # By convention exporters are located in .\exporters subfolder
-    # COMMENT: Don't check file existance. It won't play well with with pyinstaller bins
+    # COMMENT: Don't check file existance. It won't play well with pyinstaller bins
     exporter_file_name = exporter_name + ".py"
     exporter_rel_name = "telegram_messages_dump.exporters." + exporter_name
     # Load exporter from file

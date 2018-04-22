@@ -36,6 +36,7 @@ class TelegramDumper(TelegramClient):
         self.exporter_context = ExporterContext()
         self.msg_count_to_process = 0
         self.id_offset = 0
+        self.temp_files_list = []
         self.init_connect()
 
     def init_connect(self):
@@ -78,7 +79,18 @@ class TelegramDumper(TelegramClient):
         sprint('Chat name @{} resolved into channel id={}'.format(self.settings.chat_name, chat.id))
 
         # Dump history to file
-        count = self.dump_messages_in_file(chat)
+        try:
+            count = self.dump_messages_in_file(chat)
+        # pylint: disable=broad-except
+        except Exception:
+            sprint('Error: failed to dump messages into resulting file.')
+            # Clear temp files if any
+            for tf in self.temp_files_list:
+                try:
+                    os.remove(tf.name)
+                # pylint: disable=broad-except
+                except Exception:
+                    pass
 
         if self.settings.is_clean:
             try:
@@ -107,6 +119,8 @@ class TelegramDumper(TelegramClient):
         # make 5 attempts
         for _ in range(0, 5):
             try:
+                # NOTE: Telethon will make 5 attempts to reconnect
+                # before failing
                 messages = self.get_message_history(
                     peer, limit=100, offset_id=self.id_offset)
 
@@ -125,7 +139,9 @@ class TelegramDumper(TelegramClient):
         # Iterate over all (in reverse order so the latest appear
         # the last in the console) and print them with format provided by exporter.
         for msg in messages:
-            self.exporter_context.is_first_record = True if self.msg_count_to_process == 1 else False
+            self.exporter_context.is_first_record = True \
+              if self.msg_count_to_process == 1 \
+              else False
             msg_dump_str = self.exporter.format(msg, self.exporter_context)
 
             buffer.append(msg_dump_str)
@@ -157,31 +173,38 @@ class TelegramDumper(TelegramClient):
 
         self.msg_count_to_process = history_length
         self.id_offset = 0
+        self.temp_files_list = []
         output_total_count = 0
 
         # buffer to save a bulk of messages before flushing them to a file
         buffer = deque()
-        temp_files_list = []
+
 
         # process messages until either all message count requested by user are retrieved
         # or offset_id reaches msg_id=1 - the head of a channel message history
-        while self.msg_count_to_process > 0:
-            sleep(2)  # slip for a few seconds to avoid flood ban
-            self.retrieve_message_history(peer, buffer)
-            # when buffer is full, flush it into a temp file
-            if len(buffer) >= 1000:
-                with tempfile.NamedTemporaryFile(mode='w+', encoding='utf-8', delete=False) as tf:
-                    tf.write(codecs.BOM_UTF8.decode())
-                    while buffer:
-                        output_total_count += 1
-                        print(buffer.pop(), file=tf)
-                    temp_files_list.append(tf)
+        try:
+            while self.msg_count_to_process > 0:
+                sleep(2)  # slip for a few seconds to avoid flood ban
+                self.retrieve_message_history(peer, buffer)
+                # when buffer is full, flush it into a temp file
+                if len(buffer) >= 1000:
+                    with tempfile \
+                         .NamedTemporaryFile(mode='w+', encoding='utf-8', delete=False) as tf:
+                        tf.write(codecs.BOM_UTF8.decode())
+                        while buffer:
+                            output_total_count += 1
+                            print(buffer.pop(), file=tf)
+                        self.temp_files_list.append(tf)
 
-            # break if the very beginning of channel history is reached
-            if self.id_offset <= 1:
-                break
+                # break if the very beginning of channel history is reached
+                if self.id_offset <= 1:
+                    break
+        # pylint: disable=broad-except
+        except Exception:
+            sprint('Critical error detected. Saving messages retrieved so far and terminating.')
 
         # Write all chunks into resulting file
+        sprint('Merging results into an output file.')
         with codecs.open(file_path, 'w', 'utf-8') as resulting_file:
             resulting_file.write(codecs.BOM_UTF8.decode())
 
@@ -193,7 +216,7 @@ class TelegramDumper(TelegramClient):
                 print(buffer.pop(), file=resulting_file)
 
             # merge all temp files into final one and delete them
-            for tf in reversed(temp_files_list):
+            for tf in reversed(self.temp_files_list):
                 with codecs.open(tf.name, 'r', 'utf-8') as ctf:
                     for line in ctf.readlines():
                         print(line, file=resulting_file, end='')
