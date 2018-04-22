@@ -26,12 +26,6 @@ class ChatDumpSettings:
 
         args = parser.parse_args()
 
-        # Validate chat name
-        if not args.chat.startswith('@'):
-            parser.error('Chat name must start with "@"')
-        else:
-            args.chat = args.chat[1:]
-
         # Validate phone number
         try:
             if int(args.phone) <= 0:

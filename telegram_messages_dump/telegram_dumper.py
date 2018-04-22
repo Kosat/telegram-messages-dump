@@ -65,17 +65,32 @@ class TelegramDumper(TelegramClient):
 
                     self_user = self.sign_in(password=pw)
 
-    def run(self):
-        """ Dumps all desired chat messages into a file """
-        # Resolve chat name into id
-        peer = self(ResolveUsernameRequest(self.settings.chat_name))
+    def resolve_name(self, name):
+        # Search in dialogs first, this way we will find private groups and
+        # channels.
+        dialogs = self.get_dialogs()
+        for dialog in dialogs:
+            if dialog.name == name:
+                return dialog.entity
+            if dialog.entity.username == name:
+                return dialog.entity
+            if name.startswith('@') and dialog.entity.username == name[1:]:
+                return dialog.entity
 
+        # Fallback to ResolveUsernameRequest, this way we will find public
+        # not-joined groups and channels but only using username (search by
+        # name is not reliable so we don't do it).
+        if name.startswith('@'):
+            name = name[1:]
+        peer = self(ResolveUsernameRequest(name))
         if peer.chats is None or not peer.chats:
             raise ValueError('Error: failed to resolve chat name into chat_id')
+        return peer.chats[0]
 
-        chat = peer.chats[0]
-
-        sprint('Chat name @{} resolved into channel id={}'.format(self.settings.chat_name, chat.id))
+    def run(self):
+        """ Dumps all desired chat messages into a file """
+        chat = self.resolve_name(self.settings.chat_name)
+        sprint('Chat name {} resolved into channel id={}'.format(self.settings.chat_name, chat.id))
 
         # Dump history to file
         count = self.dump_messages_in_file(chat)
