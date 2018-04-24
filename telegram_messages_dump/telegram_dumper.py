@@ -83,9 +83,11 @@ class TelegramDumper(TelegramClient):
         if name.startswith('@'):
             name = name[1:]
         peer = self(ResolveUsernameRequest(name))
-        if peer.chats is None or not peer.chats:
-            raise ValueError('Error: failed to resolve chat name into chat_id')
-        return peer.chats[0]
+        if peer.chats is not None and peer.chats:
+            return peer.chats[0]
+        if peer.users is not None and peer.users:
+            return peer.users[0]
+        raise ValueError('Error: failed to resolve chat name into chat_id')
 
     def run(self):
         """ Dumps all desired chat messages into a file """
