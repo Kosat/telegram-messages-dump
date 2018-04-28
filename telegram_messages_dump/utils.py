@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring
+""" Various utility functions/classes """
 
 def sprint(string, *args, **kwargs):
     """Safe Print (handle UnicodeEncodeErrors on some terminals)"""

@@ -33,15 +33,36 @@ telegram-messages-dump -c <@chat_name> -p <phone_num> [-l <count>] [-o <file>] [
 Where:
     -c,  --chat     Unique name of a channel/chat. E.g. @python.
     -p,  --phone    Phone number. E.g. +380503211234.
-    -l,  --limit    Number of the latest messages to dump, 0 means no limit. (Default: 100)
     -o,  --out      Output file name or full path. (Default: telegram_<chatName>.log)
-    -cl, --clean    Clean session sensitive data (e.g. auth token) on exit. (Default: False)
     -e,  --exp      Exporter name. text | jsonl | csv (Default: 'text')
+      ,  --continue Continue previous dump. Supports optional integer param <message_id>.
+    -l,  --limit    Number of the latest messages to dump, 0 means no limit. (Default: 100)
+    -cl, --clean    Clean session sensitive data (e.g. auth token) on exit. (Default: False)
     -v,  --verbose  Verbose mode. (Default: False)
       ,  --addbom   Add BOM to the beginning of the output file. (Default: False)
     -h,  --help     Show this help message and exit.
 ```
 ![telegram-dump-gif](https://user-images.githubusercontent.com/153023/36110898-fda2e7f6-102c-11e8-9475-471063004be8.gif)
+
+## Increamental/Continuous mode
+After dumping messages into an output file, `telegram-messages-dump` also creates a **meta file**
+with the latest (biggest) message id that was successfully saved into an output file.
+For instance, if messages with ids 10..100 were saved in output file, the metafile will contain the `"latest_message_id": 100` record in it.
+
+- If you want to update an existing dump file use `--continue` option without a parameter value. In this case `telegram-messages-dump` will read the latest message id from a meta file. In the sample below it will be `C:\temp\xyz.txt.meta`:
+  ```
+  telegram-messages-dump ... -oC:\temp\xyz.txt  --continue
+  ```
+  In this case `telegram-messages-dump` will look for `C:\temp\xyz.txt.meta` file and try to incrimentally update the contents of `C:\temp\xyz.txt` with new messages.
+>Note: In incremental mode when metafile exists `--exporter`, `--chat` and `--exp` will be taken from the meta file and must NOT be specified explicitely as parameters. `--limit` setting has to be omitted.
+
+- Otherwise, if you DON'T have a metafile, you can still open your dump file and find the last message's id at the bottom of the file and then specify it explicitly as `--continue=<LAST_MSG_ID>` command, along with the correct `--exporter=<...>` that was used in the existing file.
+  ```
+  telegram-messages-dump ... -oC:\temp\xyz.txt  --continue=100500 --exporter=...
+  ```
+In both aforementioned cases, `telegram-messages-dump` will open the existing `C:\temp\xyz.txt` file and append the newer messages that were posted in the telegram chat since the message with the message with id 100500 was created.
+>Note: There must be `=` sign between the `--continue` command name and integer message id.
+>Note: In incremental mode without metafile,  `--exporter`, `--chat` and `--exp` must be specified explicitely as parameters. `--limit` setting has to be omitted.
 
 ## Notes
 
@@ -54,7 +75,6 @@ Exporters reside in `./exporters` subfolder.
 Basically an exporter is a class that implements three methods:
 - `format(...)` that extracts all necessary data from a message and stringifies it.
 - `begin_final_file(...)` that allows an exporter to write a preamble to a resulting output file.
-- `end_final_file(...)` that allows an exporter to write an afterword to a resulting output file.
 
 To use a custom exporter. Place you `.py` file with a class implementing those 3 methods into `./exporters` subfolder and specify its name in `--exp <exporter_name>` setting. 
 

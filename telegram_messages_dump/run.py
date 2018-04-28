@@ -4,36 +4,56 @@
 """
 Usage:
 
-telegram-messages-dump -c <@chat_name> -p <phone_num> [-l <count>] [-o <file>] [-cl]
+Normal mode:
+  telegram-messages-dump -c <@chat_name> -p <phone_num> [-l <count>] [-o <file>] [-cl] [...]
+  telegram-messages-dump --chat=<@chat_name> --phone=<phone_num> [--limit=<count>] [--out <file>]
+
+Continuous mode:
+  telegram-messages-dump --continue -p <phone_num> -o <file> [-cl] [...]
+  telegram-messages-dump --continue=<MSG_ID> -p <phone_num> -o <file> -e <exporter> -c <@chat_name>
 
 Where:
     -c,  --chat      Unique name of a channel/chat. E.g. @python.
     -p,  --phone     Phone number. E.g. +380503211234.
-    -l,  --limit     Number of the latest messages to dump, 0 means no limit. (Default: 100)
     -o,  --out       Output file name or full path. (Default: telegram_<chatName>.log)
-    -cl, --clean     Clean session sensitive data (e.g. auth token) on exit. (Default: False)
     -e,  --exp       Exporter name. text | jsonl | csv (Default: 'text')
+      ,  --continue  Continue previous dump. Supports optional integer param <message_id>.
+    -l,  --limit     Number of the latest messages to dump, 0 means no limit. (Default: 100)
+    -cl, --clean     Clean session sensitive data (e.g. auth token) on exit. (Default: False)
     -v,  --verbose   Verbose mode. (Default: False)
       ,  --addbom    Add BOM to the beginning of the output file. (Default: False)
     -h,  --help      Show this help message and exit.
 """
 
 import os
+import sys
 import importlib
 import logging
 from telegram_messages_dump.telegram_dumper import TelegramDumper
 from telegram_messages_dump.chat_dump_settings import ChatDumpSettings
+from telegram_messages_dump.chat_dump_metadata import DumpMetadata
 from telegram_messages_dump.utils import sprint
 
 def main():
     """ Entry point. """
     settings = ChatDumpSettings(__doc__)
+
+    # define the console output verbosity
+    default_format = '%(levelname)s:%(message)s'
     if settings.is_verbose:
-        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+        logging.basicConfig(format=default_format, level=logging.DEBUG)
+    else:
+        logging.basicConfig(format=default_format, level=logging.INFO)
+
+    metadata = DumpMetadata(settings.out_file)
+
+    # when user specified --continue
+    if settings.is_incremental_mode and settings.last_message_id == -1:
+        metadata.merge_into_settings(settings)
 
     exporter = _load_exporter(settings.exporter)
 
-    TelegramDumper(os.path.basename(__file__), settings, exporter).run()
+    sys.exit(TelegramDumper(os.path.basename(__file__), settings, metadata, exporter).run())
 
 def _load_exporter(exporter_name):
     """ Loads exporter from file <exporter_name>.py in ./exporters subfolder.
@@ -51,6 +71,3 @@ def _load_exporter(exporter_name):
     sprint("OK!")
     exporterClass = getattr(exporter_module, exporter_name)
     return exporterClass()
-
-if __name__ == "__main__":
-    main()

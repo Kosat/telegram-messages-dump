@@ -20,6 +20,7 @@ class jsonl(object):
         """ constructor """
         pass
 
+    # pylint: disable=unused-argument
     def format(self, msg, exporter_context):
         """ Formatter method. Takes raw msg and converts it to a *one-line* string.
             :param msg: Raw message object :class:`telethon.tl.types.Message` and derivatives.
@@ -45,12 +46,10 @@ class jsonl(object):
             msgDictionary, default=self._json_serial, ensure_ascii=False)
         return msg_dump_str
 
-    def begin_final_file(self, resulting_file):
-        """ Hook executes at the beginning of writing a resulting file. (After BOM is written)"""
-        pass
-
-    def end_final_file(self, resulting_file):
-        """ Hook executes at the end of writing a resulting file. Right before closing it."""
+    def begin_final_file(self, resulting_file, exporter_context):
+        """ Hook executes at the beginning of writing a resulting file.
+            (After BOM is written in case of --addbom)
+        """
         pass
 
     def _json_serial(self, obj):

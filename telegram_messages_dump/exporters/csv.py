@@ -47,14 +47,13 @@ class csv(object):
                                  '"' + str(self._py_encode_basestring(content)) + '"'])
         return msg_dump_str
 
-    def begin_final_file(self, resulting_file):
-        """ Hook executes at the beginning of writing a resulting file. (After BOM is written)"""
-        header_str = ",".join(["Message Id", "Time", "Sender Name", "Reply Id", "Message"])
-        print(header_str, file=resulting_file)
-
-    def end_final_file(self, resulting_file):
-        """ Hook executes at the end of writing a resulting file. Right before closing it."""
-        pass
+    def begin_final_file(self, resulting_file, exporter_context):
+        """ Hook executes at the beginning of writing a resulting file.
+            (After BOM is written in case of --addbom)
+        """
+        if not exporter_context.is_continue_mode:
+            header_str = ",".join(["Message Id", "Time", "Sender Name", "Reply Id", "Message"])
+            print(header_str, file=resulting_file)
 
     # This code is inspired by Python's json encoder's code
     def _py_encode_basestring(self, s):

@@ -43,12 +43,10 @@ class text(object):
 
         return msg_dump_str
 
-    def begin_final_file(self, resulting_file):
-        """ Hook executes at the beginning of writing a resulting file. (After BOM is written)"""
-        pass
-
-    def end_final_file(self, resulting_file):
-        """ Hook executes at the end of writing a resulting file. Right before closing it."""
+    def begin_final_file(self, resulting_file, exporter_context):
+        """ Hook executes at the beginning of writing a resulting file.
+            (After BOM is written in case of --addbom)
+        """
         pass
 
     # This code is inspired by Python's json encoder's code
