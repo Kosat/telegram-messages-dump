@@ -52,10 +52,8 @@ class ChatDumpSettings:
         self._check_options_consistency(args, parser)
 
         # Validate chat name
-        if self.last_message_id != -1 and not args.chat.startswith('@'):
-            parser.error('Chat name must start with "@"')
-        else:
-            args.chat = args.chat[1:]
+        if self.last_message_id != -1 and not args.chat != "":
+            parser.error("Chat name can't be empty")
 
         # Validate phone number
         try:
