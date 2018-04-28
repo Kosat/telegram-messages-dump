@@ -25,10 +25,11 @@ Binaries for Linux, Windows and MacOS are available in [Releases](https://github
 
 ## Usage
 
-Mandatory parameters are <chat_name> e.g. @Python or @CSharp and <phone_num> - a telephone number. A phone number is needed for authentication and will not be stored anywhere. After the first successful authorization it will create telegram_chat_dump.session file containing auth token. The information from this file is being reused in next runs. If this is not a desirable behaviour, use -cl flag to delete session file on exit.
+Mandatory parameters are <chat_name> e.g. @Python, @CSharp or a title of a dialogue, as seen in the UI, and <phone_num> - a telephone number. A phone number is needed for authentication and will not be stored anywhere. After the first successful authorization it will create telegram_chat_dump.session file containing auth token. The information from this file is being reused in next runs. If this is not a desirable behaviour, use -cl flag to delete session file on exit.
+>Note: You can use telegram dialogue user-friendly, multi-word title like so: `--chat=Moby & Docker CE. Русскоязычное сообщество` without extra quotes.
 
 ```
-telegram-messages-dump -c <@chat_name> -p <phone_num> [-l <count>] [-o <file>] [-cl]
+telegram-messages-dump -c <chat_name> -p <phone_num> [-l <count>] [-o <file>] [-cl]
 
 Where:
     -c,  --chat     Unique name of a channel/chat. E.g. @python.
