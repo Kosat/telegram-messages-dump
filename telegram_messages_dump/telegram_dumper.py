@@ -79,7 +79,9 @@ class TelegramDumper(TelegramClient):
             self._do_dump(chatObj)
         except (UsernameNotOccupiedError, UsernameInvalidError) as ex:
             self.logger.error('Failed to resolve "%s" chat/dialog name. %s',
-                      self.settings.chat_name, ex, exc_info=self.logger.level > logging.INFO)
+                              self.settings.chat_name,
+                              ex,
+                              exc_info=self.logger.level > logging.INFO)
             ret_code = 1
         except (DumpingError, MetadataError) as ex:
             self.logger.error('%s', ex, exc_info=self.logger.level > logging.INFO)
@@ -169,11 +171,11 @@ class TelegramDumper(TelegramClient):
         peer = self(ResolveUsernameRequest(name))
         if peer.chats is not None and peer.chats:
             sprint('Chat name {} resolved into channel id={}'.format(
-                    name, peer.chats[0].id))
+                name, peer.chats[0].id))
             return peer.chats[0]
         if peer.users is not None and peer.users:
             sprint('User name {} resolved into channel id={}'.format(
-                    name, peer.users[0].id))
+                name, peer.users[0].id))
             return peer.users[0]
         raise ValueError('Failed to resolve chat name {}.'.format(name))
 
