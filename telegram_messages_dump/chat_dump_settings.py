@@ -133,8 +133,6 @@ class ChatDumpSettings:
                                  'when using --continue')
         else:
             # In case of Normal mode
-            if args.out == "":
-                parser.error('the following arguments are required: -o/--out ')
             if args.chat == "":
                 parser.error('the following arguments are required: -c/--chat ')
         return
