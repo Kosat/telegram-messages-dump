@@ -3,5 +3,5 @@
 # pylint: disable=missing-docstring
 
 if __name__ == '__main__':
-    from . import run
+    from telegram_messages_dump import run
     run.main()
