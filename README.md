@@ -2,7 +2,7 @@
 [![GitHub version](https://badge.fury.io/gh/Kosat%2Ftelegram-messages-dump.svg)](https://github.com/Kosat/telegram-messages-dump/releases)
 [![Build Status](https://travis-ci.org/Kosat/telegram-messages-dump.svg?branch=master)](https://travis-ci.org/Kosat/telegram-messages-dump)
 
-This is a simple console tool for dumping message history from a Telegram chat into a __jsonl__, __csv__ or plain text file. 
+This is a simple console tool for dumping message history from a Telegram chat into a __jsonl__, __csv__ or plain __text__ file. 
 ## Installation
 **From sources:**
 Fetch the latest sources with git:
@@ -26,7 +26,7 @@ Binaries for Linux, Windows and MacOS are available in [Releases](https://github
 ## Usage
 
 Mandatory parameters are <chat_name> e.g. @Python, @CSharp or a title of a dialogue, as seen in the UI, and <phone_num> - a telephone number. A phone number is needed for authentication and will not be stored anywhere. After the first successful authorization it will create telegram_chat_dump.session file containing auth token. The information from this file is being reused in next runs. If this is not a desirable behaviour, use -cl flag to delete session file on exit.
->Note: You can use telegram dialogue user-friendly, multi-word title like so: `--chat=Moby & Docker CE. Русскоязычное сообщество` without extra quotes.
+>Note: You can use telegram dialogue multi-word title like so: `--chat="Telegram Geeks"` with double quotes. However, when using multi-word title (rather than @channel_name), you need to join the channel first. Only then you will be able to dump it. 
 
 ```
 telegram-messages-dump -c <chat_name> -p <phone_num> [-l <count>] [-o <file>] [-cl]
@@ -62,8 +62,9 @@ For instance, if messages with ids 10..100 were saved in output file, the metafi
   telegram-messages-dump -p... -oC:\temp\xyz.txt --continue=100500 --exp=jsonl --chat=@geekschat
   ```
 In both aforementioned cases, `telegram-messages-dump` will open the existing `C:\temp\xyz.txt` file and append the newer messages that were posted in the telegram chat since the message with the message with id 100500 was created.
->Note: There must be `=` sign between the `--continue` command name and integer message id.
->Note: In incremental mode without metafile,  `--exp` and `--chat` must be specified explicitely as parameters. `--limit` setting has to be omitted.
+>Note1: There must be `=` sign between the `--continue` command name and integer message id.
+
+>Note2: In incremental mode without metafile,  `--out`, `--exp` and `--chat` must be specified explicitely as parameters. `--limit` setting has to be omitted.
 
 ## Notes
 
@@ -71,7 +72,7 @@ In both aforementioned cases, `telegram-messages-dump` will open the existing `C
 
 ## Plugins
 
-Output format is managed by *exporter* plugins. Currently there are two exporters available: **text**,**jsonl** and **csv**.
+Output format is managed by *exporter* plugins. Currently there are two exporters available: **text**, **jsonl** and **csv**.
 Exporters reside in `./exporters` subfolder. 
 Basically an exporter is a class that implements three methods:
 - `format(...)` that extracts all necessary data from a message and stringifies it.
@@ -79,7 +80,7 @@ Basically an exporter is a class that implements three methods:
 
 To use a custom exporter. Place you `.py` file with a class implementing those 3 methods into `./exporters` subfolder and specify its name in `--exp <exporter_name>` setting. 
 
->Note: the class name **MUST** exactly match the file name of its `.py` file. This very same name is used as an argument for the `--exp` setting.
+>Note1: the class name **MUST** exactly match the file name of its `.py` file. This very same name is used as an argument for the `--exp` setting.
 
 >Note2: in `.vscode` subfolder you can find the default settings that I use for debugging this project.  
 
