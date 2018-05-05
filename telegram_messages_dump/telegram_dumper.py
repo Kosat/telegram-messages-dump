@@ -74,15 +74,15 @@ class TelegramDumper(TelegramClient):
         ret_code = 0
         try:
             self._init_connect()
-            chatObj = self._getChannel()
+            try:
+                chatObj = self._getChannel()
+            except ValueError as ex:
+                ret_code = 1
+                self.logger.error('%s', ex,
+                              exc_info=self.logger.level > logging.INFO)
+                return
             # Fetch history in chunks and save it into a resulting file
             self._do_dump(chatObj)
-        except (UsernameNotOccupiedError, UsernameInvalidError) as ex:
-            self.logger.error('Failed to resolve "%s" chat/dialog name. %s',
-                              self.settings.chat_name,
-                              ex,
-                              exc_info=self.logger.level > logging.INFO)
-            ret_code = 1
         except (DumpingError, MetadataError) as ex:
             self.logger.error('%s', ex, exc_info=self.logger.level > logging.INFO)
             ret_code = 1
@@ -143,41 +143,49 @@ class TelegramDumper(TelegramClient):
             at Telegram server
         """
         name = self.settings.chat_name
+
+        if name.startswith('@'):
+            name = name[1:]
+            self.logger.debug('Trying ResolveUsernameRequest().')
+            try:
+                peer = self(ResolveUsernameRequest(name))
+                if peer.chats is not None and peer.chats:
+                    sprint('Chat name "{}" resolved into channel id={}'.format(
+                        name, peer.chats[0].id))
+                    return peer.chats[0]
+                if peer.users is not None and peer.users:
+                    sprint('User name "{}" resolved into channel id={}'.format(
+                        name, peer.users[0].id))
+                    return peer.users[0]
+            except (UsernameNotOccupiedError, UsernameInvalidError) as ex:
+                self.logger.debug('Failed to resolve "%s" as @-chat-name. %s',
+                                  self.settings.chat_name,
+                                  ex,
+                                  exc_info=self.logger.level > logging.INFO)
+
         # Search in dialogs first, this way we will find private groups and
         # channels.
-        self.logger.debug('Fetch loggedin user''s dialogs')
+        self.logger.debug('Fetch loggedin user`s dialogs')
+        dialogs_count = self.get_dialogs(0).total
+        self.logger.info('%s user`s dialogs found', dialogs_count)
         dialogs = self.get_dialogs(limit=None)
         self.logger.debug('%s dialogs fetched.', len(dialogs))
         for dialog in dialogs:
             if dialog.name == name:
-                sprint('Dialog title {} resolved into channel id={}'.format(
+                sprint('Dialog title "{}" resolved into channel id={}'.format(
                     name, dialog.entity.id))
                 return dialog.entity
             if dialog.entity.username == name:
-                sprint('Dialog username {} resolved into channel id={}'.format(
+                sprint('Dialog username "{}" resolved into channel id={}'.format(
                     name, dialog.entity.id))
                 return dialog.entity
             if name.startswith('@') and dialog.entity.username == name[1:]:
-                sprint('Dialog username {} resolved into channel id={}'.format(
+                sprint('Dialog username "{}" resolved into channel id={}'.format(
                     name, dialog.entity.id))
                 return dialog.entity
         self.logger.debug('Specified chat name was not found among dialogs.')
-        # Fallback to ResolveUsernameRequest, this way we will find public
-        # not-joined groups and channels but only using username (search by
-        # name is not reliable so we don't do it).
-        if name.startswith('@'):
-            name = name[1:]
-        self.logger.debug('Trying ResolveUsernameRequest().')
-        peer = self(ResolveUsernameRequest(name))
-        if peer.chats is not None and peer.chats:
-            sprint('Chat name {} resolved into channel id={}'.format(
-                name, peer.chats[0].id))
-            return peer.chats[0]
-        if peer.users is not None and peer.users:
-            sprint('User name {} resolved into channel id={}'.format(
-                name, peer.users[0].id))
-            return peer.users[0]
-        raise ValueError('Failed to resolve chat name {}.'.format(name))
+
+        raise ValueError('Failed to resolve dialogue/chat name "{}".'.format(name))
 
     def _fetch_messages_from_server(self, peer, buffer):
         """ Retrieves a number (100) of messages from Telegram's DC and adds them to 'buffer'.
@@ -195,7 +203,7 @@ class TelegramDumper(TelegramClient):
             try:
                 # NOTE: Telethon will make 5 attempts to reconnect
                 # before failing
-                messages = self.get_message_history(
+                messages = self.get_messages(
                     peer, limit=100, offset_id=self.id_offset)
 
                 if messages.total > 0 and messages:
