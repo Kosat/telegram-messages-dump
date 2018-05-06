@@ -351,7 +351,7 @@ class TelegramDumper(TelegramClient):
     def _merge_temp_files_into_final(self, resulting_file, temp_files_list_meta):
         """ merge all temp files into final one and delete them """
         while self.temp_files_list:
-            tf = self.temp_files_list.popleft()
+            tf = self.temp_files_list.pop()
             with codecs.open(tf.name, 'r', 'utf-8') as ctf:
                 for line in ctf.readlines():
                     print(line, file=resulting_file, end='')
@@ -360,7 +360,7 @@ class TelegramDumper(TelegramClient):
             tf.close()
             os.remove(tf.name)
             # update the latest_message_id metadata
-            batch_latest_message_id = temp_files_list_meta.popleft()
+            batch_latest_message_id = temp_files_list_meta.pop()
             if batch_latest_message_id > self.cur_latest_message_id:
                 self.cur_latest_message_id = batch_latest_message_id
 
