@@ -13,11 +13,9 @@ import logging
 from collections import deque
 from getpass import getpass
 from time import sleep
-from telethon import TelegramClient, ConnectionMode
-from telethon.errors import SessionPasswordNeededError
-from telethon.errors.rpc_error_list import FloodWaitError
-from telethon.errors.rpc_error_list import UsernameNotOccupiedError
-from telethon.errors.rpc_error_list import UsernameInvalidError
+from telethon import TelegramClient
+from telethon.network import ConnectionTcpFull
+from telethon.errors import FloodWaitError, SessionPasswordNeededError, UsernameNotOccupiedError, UsernameInvalidError
 from telethon.tl.functions.contacts import ResolveUsernameRequest
 from telegram_messages_dump.utils import sprint
 from telegram_messages_dump.exceptions import DumpingError
@@ -35,7 +33,7 @@ class TelegramDumper(TelegramClient):
         super().__init__(session_user_id,
                          settings.api_id,
                          settings.api_hash,
-                         connection_mode=ConnectionMode.TCP_FULL,
+                         connection_mode=ConnectionTcpFull,
                          proxy=None,
                          update_workers=1)
 
