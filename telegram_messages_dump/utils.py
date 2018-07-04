@@ -10,3 +10,6 @@ def sprint(string, *args, **kwargs):
         string = string.encode('utf-8', errors='ignore') \
             .decode('ascii', errors='ignore')
         print(string, *args, **kwargs)
+
+
+JOIN_CHAT_PREFIX_URL = 'https://t.me/joinchat/'

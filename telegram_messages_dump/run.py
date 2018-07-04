@@ -32,6 +32,7 @@ import logging
 from telegram_messages_dump.telegram_dumper import TelegramDumper
 from telegram_messages_dump.chat_dump_settings import ChatDumpSettings
 from telegram_messages_dump.chat_dump_metadata import DumpMetadata
+from telegram_messages_dump.chat_dump_metadata import MetadataError
 from telegram_messages_dump.utils import sprint
 
 def main():
@@ -48,8 +49,12 @@ def main():
     metadata = DumpMetadata(settings.out_file)
 
     # when user specified --continue
-    if settings.is_incremental_mode and settings.last_message_id == -1:
-        metadata.merge_into_settings(settings)
+    try:
+        if settings.is_incremental_mode and settings.last_message_id == -1:
+            metadata.merge_into_settings(settings)
+    except MetadataError as ex:
+        sprint("ERROR: %s" % ex)
+        sys.exit(1)
 
     exporter = _load_exporter(settings.exporter)
 
