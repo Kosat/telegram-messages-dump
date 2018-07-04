@@ -3,7 +3,7 @@
 """ This Module contains classes related to CLI interactions"""
 
 import argparse
-# import dateutil.parser
+from telegram_messages_dump.utils import JOIN_CHAT_PREFIX_URL
 
 
 class ChatDumpSettings:
@@ -72,9 +72,13 @@ class ChatDumpSettings:
             parser.error('Exporter name is invalid.')
 
         # Default output file if not specified by user
-        out_file = 'telegram_{}.log'.format(args.chat)
-        if args.out:
+        OUTPUT_FILE_TEMPLATE = 'telegram_{}.log'
+        if args.out != '':
             out_file = args.out
+        elif args.chat.startswith(JOIN_CHAT_PREFIX_URL):
+            out_file = OUTPUT_FILE_TEMPLATE.format(args.chat.rsplit('/', 1)[-1])
+        else:
+            out_file = OUTPUT_FILE_TEMPLATE.format(args.chat)
 
         self.chat_name = args.chat
         self.phone_num = args.phone

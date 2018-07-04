@@ -18,6 +18,7 @@ from telethon.network import ConnectionTcpFull
 from telethon.errors import FloodWaitError, SessionPasswordNeededError, UsernameNotOccupiedError, UsernameInvalidError
 from telethon.tl.functions.contacts import ResolveUsernameRequest
 from telegram_messages_dump.utils import sprint
+from telegram_messages_dump.utils import JOIN_CHAT_PREFIX_URL
 from telegram_messages_dump.exceptions import DumpingError
 from telegram_messages_dump.exceptions import MetadataError
 from telegram_messages_dump.exporter_context import ExporterContext
@@ -77,7 +78,7 @@ class TelegramDumper(TelegramClient):
             except ValueError as ex:
                 ret_code = 1
                 self.logger.error('%s', ex,
-                              exc_info=self.logger.level > logging.INFO)
+                                  exc_info=self.logger.level > logging.INFO)
                 return
             # Fetch history in chunks and save it into a resulting file
             self._do_dump(chatObj)
@@ -141,6 +142,23 @@ class TelegramDumper(TelegramClient):
             at Telegram server
         """
         name = self.settings.chat_name
+
+        # For private channуls try to resolve channel peer object from its invitation link
+        # Note: it will only work if the login user has already joined the private channel.
+        # Otherwise, get_entity will throw ValueError
+        if name.startswith(JOIN_CHAT_PREFIX_URL):
+            self.logger.debug('Trying to resolve as invite url.')
+            try:
+                peer = self.get_entity(name)
+                if peer:
+                    sprint('Invitation link "{}" resolved into channel id={}'.format(
+                        name, peer.id))
+                    return peer
+            except ValueError as ex:
+                self.logger.debug('Failed to resolve "%s" as an invitation link. %s',
+                                  self.settings.chat_name,
+                                  ex,
+                                  exc_info=self.logger.level > logging.INFO)
 
         if name.startswith('@'):
             name = name[1:]
@@ -349,7 +367,7 @@ class TelegramDumper(TelegramClient):
     def _merge_temp_files_into_final(self, resulting_file, temp_files_list_meta):
         """ merge all temp files into final one and delete them """
         while self.temp_files_list:
-            tf = self.temp_files_list.popleft()
+            tf = self.temp_files_list.pop()
             with codecs.open(tf.name, 'r', 'utf-8') as ctf:
                 for line in ctf.readlines():
                     print(line, file=resulting_file, end='')
@@ -358,7 +376,7 @@ class TelegramDumper(TelegramClient):
             tf.close()
             os.remove(tf.name)
             # update the latest_message_id metadata
-            batch_latest_message_id = temp_files_list_meta.popleft()
+            batch_latest_message_id = temp_files_list_meta.pop()
             if batch_latest_message_id > self.cur_latest_message_id:
                 self.cur_latest_message_id = batch_latest_message_id
 
