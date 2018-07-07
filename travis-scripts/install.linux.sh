@@ -5,7 +5,7 @@ echo pwd
 pwd
 
 #Build for Linux
-pip install -I telethon==0.18.3
+pip install -I telethon==0.19.1.6
 pyinstaller -F -n telegram-messages-dump \
 -c ./telegram_messages_dump/__main__.py \
 --hidden-import telegram_messages_dump.exporters.text \
@@ -13,7 +13,7 @@ pyinstaller -F -n telegram-messages-dump \
 --hidden-import telegram_messages_dump.exporters.csv
 
 #Setup build env for Windows: pyinstaller+telethon
-# wine pip install -I telethon==0.18
+# wine pip install -I telethon==0.19.1.6
 # wine pip install pyinstaller
 # wine pyinstaller -n telegram-messages-dump.exe --onefile --clean --win-private-assemblies -c --noconfirm --log-level=WARN ./telegram_messages_dump/__main__.py --hidden-import telegram_messages_dump.exporters.text --hidden-import telegram_messages_dump.exporters.jsonl --hidden-import telegram_messages_dump.exporters.csv
 

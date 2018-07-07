@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Install telethon:
-pip3 install -I telethon==0.18.3
+pip3 install -I telethon==0.19.1.6
 pyinstaller -n telegram-messages-dump --noconsole --onefile \
 --hidden-import telegram_messages_dump.exporters.text \
 --hidden-import telegram_messages_dump.exporters.jsonl \
