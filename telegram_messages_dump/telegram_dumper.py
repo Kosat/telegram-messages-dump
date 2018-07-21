@@ -189,7 +189,7 @@ class TelegramDumper(TelegramClient):
                 sprint('Dialog title "{}" resolved into channel id={}'.format(
                     name, dialog.entity.id))
                 return dialog.entity
-            if dialog.entity.username == name:
+            if hasattr(dialog.entity, 'username') and dialog.entity.username == name:
                 sprint('Dialog username "{}" resolved into channel id={}'.format(
                     name, dialog.entity.id))
                 return dialog.entity
