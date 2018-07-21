@@ -87,7 +87,7 @@ class TelegramDumper(TelegramClient):
             sprint("Received a user's request to interrupt, stopping…")
             ret_code = 1
         except Exception as ex:  # pylint: disable=broad-except
-            self.logger.error('Uncaught exception occured. %s', ex,
+            self.logger.error('Uncaught exception occurred. %s', ex,
                               exc_info=self.logger.level > logging.INFO)
             ret_code = 1
         finally:
@@ -179,7 +179,7 @@ class TelegramDumper(TelegramClient):
 
         # Search in dialogs first, this way we will find private groups and
         # channels.
-        self.logger.debug('Fetch loggedin user`s dialogs')
+        self.logger.debug('Fetch logged in user`s dialogs')
         dialogs_count = self.get_dialogs(0).total
         self.logger.info('%s user`s dialogs found', dialogs_count)
         dialogs = self.get_dialogs(limit=None)
