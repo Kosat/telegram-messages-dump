@@ -40,6 +40,12 @@ class csv(object):
         #     msg.date.year, msg.date.month, msg.date.day,
         #     msg.date.hour, msg.date.minute, msg.id, "RE_ID=%s " % re_id if re_id else "",
         #     name, self._py_encode_basestring(content))
+
+        # Check if name contains ','. If it does surround the name with quotes.
+        if name and name.find(",") != -1:
+            if name.startswith("\"") and name.endswith("\""):
+                name = '"' + name + '"'
+
         msg_dump_str = ",".join([str(msg.id),
                                  msg.date.isoformat(),
                                  name,
