@@ -271,6 +271,7 @@ class TelegramDumper(TelegramClient):
         """
         self.msg_count_to_process = self.settings.limit \
             if self.settings.limit != -1\
+            and not self.settings.limit == 0\
             and not self.settings.is_incremental_mode\
             else sys.maxsize
 
