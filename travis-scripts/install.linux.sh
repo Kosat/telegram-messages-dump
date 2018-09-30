@@ -18,6 +18,6 @@ pyinstaller -F -n telegram-messages-dump \
 # wine pyinstaller -n telegram-messages-dump.exe --onefile --clean --win-private-assemblies -c --noconfirm --log-level=WARN ./telegram_messages_dump/__main__.py --hidden-import telegram_messages_dump.exporters.text --hidden-import telegram_messages_dump.exporters.jsonl --hidden-import telegram_messages_dump.exporters.csv
 
 #Package for distribution
-cd ./dist
+cd ./dist || exit
 tar -zcvf telegram_messages_dump_linux.tar.gz ./telegram-messages-dump
 # zip -r telegram_messages_dump_windows.zip ./telegram-messages-dump.exe

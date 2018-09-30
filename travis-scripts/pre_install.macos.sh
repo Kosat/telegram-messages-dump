@@ -11,7 +11,7 @@ brew upgrade python
 #virtualenv env -p python3
 #source env/bin/activate
 echo Which python:
-which python3
+command -v python3
 
 #echo Which python3:
 #which python3

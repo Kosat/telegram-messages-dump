@@ -9,5 +9,5 @@ pyinstaller -n telegram-messages-dump --noconsole --onefile \
  ./telegram_messages_dump/__main__.py
 
 #Package for distribution
-cd ./dist
+cd ./dist || exit
 tar -zcvf telegram_messages_dump_darwin.tar.gz ./telegram-messages-dump
