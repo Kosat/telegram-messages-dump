@@ -5,6 +5,7 @@
 import re
 from .common import common
 
+
 class csv(object):
     """ csv (comma separated values) exporter plugin.
         By convention it has to be called exactly the same as its file name.
@@ -15,16 +16,16 @@ class csv(object):
         """ constructor """
         self.ESCAPE = re.compile(r'[\x00-\x1f\\"\b\f\n\r\t]')
         self.ESCAPE_DICT = {
-            '\\': '\\\\',
+            "\\": "\\\\",
             '"': '""',
-            '\b': '\\b',
-            '\f': '\\f',
-            '\n': '\\n',
-            '\r': '\\r',
-            '\t': '\\t',
+            "\b": "\\b",
+            "\f": "\\f",
+            "\n": "\\n",
+            "\r": "\\r",
+            "\t": "\\t",
         }
         for i in range(0x20):
-            self.ESCAPE_DICT.setdefault(chr(i), '\\u{0:04x}'.format(i))
+            self.ESCAPE_DICT.setdefault(chr(i), "\\u{0:04x}".format(i))
 
     def format(self, msg, exporter_context):
         """ Formatter method. Takes raw msg and converts it to a *one-line* string.
@@ -48,11 +49,15 @@ class csv(object):
         if name and (name.find(",") != -1 or isNameModified):
             name = '"' + name + '"'
 
-        msg_dump_str = ",".join([str(msg.id),
-                                 msg.date.isoformat(),
-                                 name,
-                                 str(re_id),
-                                 '"' + str(self._py_encode_basestring(content)[0]) + '"'])
+        msg_dump_str = ",".join(
+            [
+                str(msg.id),
+                msg.date.isoformat(),
+                name,
+                str(re_id),
+                '"' + str(self._py_encode_basestring(content)[0]) + '"',
+            ]
+        )
         return msg_dump_str
 
     def begin_final_file(self, resulting_file, exporter_context):
@@ -60,7 +65,9 @@ class csv(object):
             (After BOM is written in case of --addbom)
         """
         if not exporter_context.is_continue_mode:
-            header_str = ",".join(["Message Id", "Time", "Sender Name", "Reply Id", "Message"])
+            header_str = ",".join(
+                ["Message Id", "Time", "Sender Name", "Reply Id", "Message"]
+            )
             print(header_str, file=resulting_file)
 
     # This code is inspired by Python's json encoder's code
@@ -69,8 +76,10 @@ class csv(object):
         if not s:
             return s, False
         isAnyCharReplaced = False
+
         def replace(match):
             nonlocal isAnyCharReplaced
             isAnyCharReplaced = True
             return self.ESCAPE_DICT[match.group(0)]
+
         return str(self.ESCAPE.sub(replace, s)), isAnyCharReplaced

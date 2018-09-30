@@ -5,6 +5,7 @@
 import re
 from .common import common
 
+
 class text(object):
     """ text exporter plugin.
         By convention it has to be called exactly the same as its file name.
@@ -13,18 +14,18 @@ class text(object):
 
     def __init__(self):
         """ constructor """
-        self.ESCAPE = re.compile(r'[\x00-\x1f\b\f\n\r\t]')
+        self.ESCAPE = re.compile(r"[\x00-\x1f\b\f\n\r\t]")
         self.ESCAPE_DICT = {
-            '\\': '\\\\',
+            "\\": "\\\\",
             # '"': '\\"',
-            '\b': '\\b',
-            '\f': '\\f',
-            '\n': '\\n',
-            '\r': '\\r',
-            '\t': '\\t',
+            "\b": "\\b",
+            "\f": "\\f",
+            "\n": "\\n",
+            "\r": "\\r",
+            "\t": "\\t",
         }
         for i in range(0x20):
-            self.ESCAPE_DICT.setdefault(chr(i), '\\u{0:04x}'.format(i))
+            self.ESCAPE_DICT.setdefault(chr(i), "\\u{0:04x}".format(i))
 
     def format(self, msg, exporter_context):
         """ Formatter method. Takes raw msg and converts it to a *one-line* string.
@@ -36,10 +37,17 @@ class text(object):
         # pylint: disable=unused-argument
         name, _, content, re_id, _, _, _ = common.extract_message_data(msg)
         # Format a message log record
-        msg_dump_str = '[{}-{:02d}-{:02d} {:02d}:{:02d}] ID={} {}{}: {}'.format(
-            msg.date.year, msg.date.month, msg.date.day,
-            msg.date.hour, msg.date.minute, msg.id, "RE_ID=%s " % re_id if re_id else "",
-            name, self._py_encode_basestring(content))
+        msg_dump_str = "[{}-{:02d}-{:02d} {:02d}:{:02d}] ID={} {}{}: {}".format(
+            msg.date.year,
+            msg.date.month,
+            msg.date.day,
+            msg.date.hour,
+            msg.date.minute,
+            msg.id,
+            "RE_ID=%s " % re_id if re_id else "",
+            name,
+            self._py_encode_basestring(content),
+        )
 
         return msg_dump_str
 
@@ -54,6 +62,8 @@ class text(object):
         """Return a JSON representation of a Python string"""
         if not s:
             return s
+
         def replace(match):
             return self.ESCAPE_DICT[match.group(0)]
+
         return self.ESCAPE.sub(replace, s)

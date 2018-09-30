@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
 
+
 class ExporterContext:
     """ Exporter context """
 

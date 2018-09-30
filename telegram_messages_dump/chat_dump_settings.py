@@ -15,23 +15,23 @@ class ChatDumpSettings:
 
         # From telegram-cli
         self.api_id = 2899
-        self.api_hash = '36722c72256a24c1225de00eb6a1ca74'
+        self.api_hash = "36722c72256a24c1225de00eb6a1ca74"
 
         # Parse parameters
-        parser = CustomArgumentParser(
-            formatter_class=CustomFormatter, usage=usage)
+        parser = CustomArgumentParser(formatter_class=CustomFormatter, usage=usage)
 
-        parser.add_argument('-c', '--chat', default='', required=False, type=str)
-        parser.add_argument('-p', '--phone', required=True, type=str)
-        parser.add_argument('-o', '--out', default='', type=str)
-        parser.add_argument('-e', '--exp', default='', type=str)
-        parser.add_argument('--continue', dest='increment',
-                            default='*', type=str, nargs='?')
-        parser.add_argument('-l', '--limit', default=-1, type=int)
-        parser.add_argument('-cl', '--clean', action='store_true')
-        parser.add_argument('-v', '--verbose', action='store_true')
-        parser.add_argument('--addbom', action='store_true')
-        parser.add_argument('-q', '--quiet', action='store_true')
+        parser.add_argument("-c", "--chat", default="", required=False, type=str)
+        parser.add_argument("-p", "--phone", required=True, type=str)
+        parser.add_argument("-o", "--out", default="", type=str)
+        parser.add_argument("-e", "--exp", default="", type=str)
+        parser.add_argument(
+            "--continue", dest="increment", default="*", type=str, nargs="?"
+        )
+        parser.add_argument("-l", "--limit", default=-1, type=int)
+        parser.add_argument("-cl", "--clean", action="store_true")
+        parser.add_argument("-v", "--verbose", action="store_true")
+        parser.add_argument("--addbom", action="store_true")
+        parser.add_argument("-q", "--quiet", action="store_true")
 
         args = parser.parse_args()
 
@@ -60,23 +60,23 @@ class ChatDumpSettings:
             if int(args.phone) <= 0:
                 raise ValueError
         except ValueError:
-            parser.error('Phone number is invalid.')
+            parser.error("Phone number is invalid.")
 
         # Validate limit / set default
         if not self.is_incremental_mode and args.limit < 0:
             args.limit = 100
 
         # Validate exporter name / set default
-        exp_file = 'text' if not args.exp else args.exp
+        exp_file = "text" if not args.exp else args.exp
         if not exp_file:
-            parser.error('Exporter name is invalid.')
+            parser.error("Exporter name is invalid.")
 
         # Default output file if not specified by user
-        OUTPUT_FILE_TEMPLATE = 'telegram_{}.log'
-        if args.out != '':
+        OUTPUT_FILE_TEMPLATE = "telegram_{}.log"
+        if args.out != "":
             out_file = args.out
         elif args.chat.startswith(JOIN_CHAT_PREFIX_URL):
-            out_file = OUTPUT_FILE_TEMPLATE.format(args.chat.rsplit('/', 1)[-1])
+            out_file = OUTPUT_FILE_TEMPLATE.format(args.chat.rsplit("/", 1)[-1])
         else:
             out_file = OUTPUT_FILE_TEMPLATE.format(args.chat)
 
@@ -95,7 +95,7 @@ class ChatDumpSettings:
         self.last_message_id = -1
         self.is_incremental_mode = False
 
-        if not args.increment == '*':
+        if not args.increment == "*":
             # if user specified --continue with/without a parameter
             self.is_incremental_mode = True
             if args.increment:
@@ -104,41 +104,52 @@ class ChatDumpSettings:
                 try:
                     self.last_message_id = int(args.increment)
                 except ValueError:
-                    parser.error(
-                        'Unable to parse MSG_ID in --continue=<MSG_ID>')
+                    parser.error("Unable to parse MSG_ID in --continue=<MSG_ID>")
         return
 
     def _check_options_consistency(self, args, parser):
         if self.is_incremental_mode:
             if args.out == "":
-                parser.error('To increment an existing dump file. '
-                             'You have to specify it using --out or -o setting.')
+                parser.error(
+                    "To increment an existing dump file. "
+                    "You have to specify it using --out or -o setting."
+                )
             if self.last_message_id != -1:
                 # In case of --continue=<MSG_ID>
                 if args.chat == "":
-                    parser.error('chat name must be specified explicitely '
-                                 'when using --continue=<MSG_ID>')
+                    parser.error(
+                        "chat name must be specified explicitely "
+                        "when using --continue=<MSG_ID>"
+                    )
                 if args.exp == "":
-                    parser.error('exporter must be specified explicitely '
-                                 'when using --continue=<MSG_ID>')
+                    parser.error(
+                        "exporter must be specified explicitely "
+                        "when using --continue=<MSG_ID>"
+                    )
                 if args.limit != -1:
-                    parser.error('limit setting is not allowed '
-                                 'when using --continue=<MSG_ID>')
+                    parser.error(
+                        "limit setting is not allowed " "when using --continue=<MSG_ID>"
+                    )
             else:
                 # In case of --continue
                 if args.chat != "":
-                    parser.error('chat name must NOT be specified explicitely '
-                                 'when using --continue')
+                    parser.error(
+                        "chat name must NOT be specified explicitely "
+                        "when using --continue"
+                    )
                 if args.exp != "":
-                    parser.error('exporter must NOT be specified explicitely '
-                                 'when using --continue')
+                    parser.error(
+                        "exporter must NOT be specified explicitely "
+                        "when using --continue"
+                    )
                 if args.limit != -1:
-                    parser.error('limit setting is not allowed '
-                                 'when using --continue')
+                    parser.error(
+                        "limit setting is not allowed " "when using --continue"
+                    )
         else:
             # In case of Normal mode
             if args.chat == "":
-                parser.error('the following arguments are required: -c/--chat ')
+                parser.error("the following arguments are required: -c/--chat ")
         return
 
 
@@ -148,13 +159,12 @@ class CustomFormatter(argparse.HelpFormatter):
         (e.g. positional, optional params and epilog).
     """
 
-    def __init__(self, prog=''):
-        argparse.HelpFormatter.__init__(
-            self, prog, max_help_position=100, width=150)
+    def __init__(self, prog=""):
+        argparse.HelpFormatter.__init__(self, prog, max_help_position=100, width=150)
 
     def add_usage(self, usage, actions, groups, prefix=None):
         if usage is not argparse.SUPPRESS:
-            args = usage, actions, groups, ''
+            args = usage, actions, groups, ""
             self._add_item(self._format_usage, args)
 
     def _format_usage(self, usage, actions, groups, prefix):
@@ -174,7 +184,6 @@ class CustomArgumentParser(argparse.ArgumentParser):
         formatter = self._get_formatter()
 
         # usage
-        formatter.add_usage(self.usage, self._actions,
-                            self._mutually_exclusive_groups)
+        formatter.add_usage(self.usage, self._actions, self._mutually_exclusive_groups)
 
         return formatter.format_help()

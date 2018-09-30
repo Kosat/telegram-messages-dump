@@ -6,6 +6,7 @@ import json
 from datetime import date, datetime
 from .common import common
 
+
 class jsonl(object):
     """ jsonl exporter plugin.
 
@@ -14,6 +15,7 @@ class jsonl(object):
 
     See http://jsonlines.org.
     """
+
     # pylint: disable=no-self-use
 
     def __init__(self):
@@ -29,21 +31,24 @@ class jsonl(object):
             :returns: *one-line* string containing one message data.
         """
         # pylint: disable=line-too-long
-        name, _, content, re_id, is_sent_by_bot, is_contains_media, media_content = common.extract_message_data(msg)
+        name, _, content, re_id, is_sent_by_bot, is_contains_media, media_content = common.extract_message_data(
+            msg
+        )
 
         msgDictionary = {
-            'message_id': msg.id,
-            'from_id': msg.from_id,
-            'reply_id': re_id,
-            'author': name,
-            'sent_by_bot': is_sent_by_bot,
-            'date': msg.date,
-            'content': content,
-            'contains_media': is_contains_media,
-            'media_content': media_content
+            "message_id": msg.id,
+            "from_id": msg.from_id,
+            "reply_id": re_id,
+            "author": name,
+            "sent_by_bot": is_sent_by_bot,
+            "date": msg.date,
+            "content": content,
+            "contains_media": is_contains_media,
+            "media_content": media_content,
         }
         msg_dump_str = json.dumps(
-            msgDictionary, default=self._json_serial, ensure_ascii=False)
+            msgDictionary, default=self._json_serial, ensure_ascii=False
+        )
         return msg_dump_str
 
     def begin_final_file(self, resulting_file, exporter_context):

@@ -35,12 +35,13 @@ from telegram_messages_dump.chat_dump_metadata import DumpMetadata
 from telegram_messages_dump.chat_dump_metadata import MetadataError
 from telegram_messages_dump.utils import sprint
 
+
 def main():
     """ Entry point. """
     settings = ChatDumpSettings(__doc__)
 
     # define the console output verbosity
-    default_format = '%(levelname)s:%(message)s'
+    default_format = "%(levelname)s:%(message)s"
     if settings.is_verbose:
         logging.basicConfig(format=default_format, level=logging.DEBUG)
     else:
@@ -58,7 +59,10 @@ def main():
 
     exporter = _load_exporter(settings.exporter)
 
-    sys.exit(TelegramDumper(os.path.basename(__file__), settings, metadata, exporter).run())
+    sys.exit(
+        TelegramDumper(os.path.basename(__file__), settings, metadata, exporter).run()
+    )
+
 
 def _load_exporter(exporter_name):
     """ Loads exporter from file <exporter_name>.py in ./exporters subfolder.
@@ -71,19 +75,23 @@ def _load_exporter(exporter_name):
     exporter_file_name = exporter_name + ".py"
     exporter_rel_name = "telegram_messages_dump.exporters." + exporter_name
     # Load exporter from file
-    sprint("Try to load exporter '%s'...  " % (exporter_file_name), end='')
+    sprint("Try to load exporter '%s'...  " % (exporter_file_name), end="")
     try:
         exporter_module = importlib.import_module(exporter_rel_name)
         sprint("OK!")
     except ModuleNotFoundError:
-        sprint("\nERROR: Failed to load exporter './exporters/%s'." % exporter_file_name)
+        sprint(
+            "\nERROR: Failed to load exporter './exporters/%s'." % exporter_file_name
+        )
         exit(1)
 
     try:
         exporterClass = getattr(exporter_module, exporter_name)
     except AttributeError:
-        sprint("ERROR: Failed to load class '%s' out of './exporters/%s'." \
-               % (exporter_name, exporter_file_name))
+        sprint(
+            "ERROR: Failed to load class '%s' out of './exporters/%s'."
+            % (exporter_name, exporter_file_name)
+        )
         exit(1)
 
     return exporterClass()
