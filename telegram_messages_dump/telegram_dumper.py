@@ -238,9 +238,8 @@ class TelegramDumper(TelegramClient):
         # Iterate over all (in reverse order so the latest appear
         # the last in the console) and print them with format provided by exporter.
         for msg in messages:
-            self.exporter_context.is_first_record = True \
-                if self.msg_count_to_process == 1 \
-                else False
+            self.exporter_context.is_first_record = \
+                self.msg_count_to_process == 1
 
             if self.settings.last_message_id >= msg.id:
                 self.msg_count_to_process = 0
