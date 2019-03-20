@@ -206,8 +206,8 @@ class TelegramDumper(TelegramClient):
             :param peer:        Chat/Channel object
             :param buffer:      buffer where to place retrieved messages
 
-            :return
-                latest_message_id The latest/biggest Message ID that sucessfully went into buffer.
+            :return The latest/biggest Message ID that successfully went into buffer,
+                    or -1 if there are no more messages.
         """
         messages = []
 
@@ -238,9 +238,8 @@ class TelegramDumper(TelegramClient):
         # Iterate over all (in reverse order so the latest appear
         # the last in the console) and print them with format provided by exporter.
         for msg in messages:
-            self.exporter_context.is_first_record = True \
-                if self.msg_count_to_process == 1 \
-                else False
+            self.exporter_context.is_first_record = \
+                self.msg_count_to_process == 1
 
             if self.settings.last_message_id >= msg.id:
                 self.msg_count_to_process = 0
@@ -309,8 +308,9 @@ class TelegramDumper(TelegramClient):
                 if len(buffer) >= 1000:
                     self._flush_buffer_in_temp_file(buffer)
                     temp_files_list_meta.append(latest_message_id_fetched)
+
                 # break if the very beginning of channel history is reached
-                if self.id_offset <= 1:
+                if latest_message_id_fetched == -1 or self.id_offset <= 1:
                     break
         except RuntimeError as ex:
             sprint('Fetching messages from server failed. ' + str(ex))
