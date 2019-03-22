@@ -21,7 +21,7 @@ telegram-messages-dump
 ```
 **Binaries:**
 
-Binaries for Linux, Windows and MacOS are available in [Releases](https://github.com/Kosat/telegram-messages-dump/releases) section.
+Binaries for Linux, Windows ~~and MacOS~~ are available in [Releases](https://github.com/Kosat/telegram-messages-dump/releases) section.
 
 ## Usage
 
