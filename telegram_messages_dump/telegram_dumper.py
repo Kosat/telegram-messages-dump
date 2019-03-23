@@ -13,7 +13,7 @@ import logging
 from collections import deque
 from getpass import getpass
 from time import sleep
-from telethon import TelegramClient
+from telethon import TelegramClient, sync
 from telethon.errors import FloodWaitError, SessionPasswordNeededError, UsernameNotOccupiedError, UsernameInvalidError
 from telethon.tl.functions.contacts import ResolveUsernameRequest
 from telegram_messages_dump.utils import sprint
@@ -33,8 +33,7 @@ class TelegramDumper(TelegramClient):
         super().__init__(session_user_id,
                          settings.api_id,
                          settings.api_hash,
-                         proxy=None,
-                         update_workers=1)
+                         proxy=None)
 
         # Settings as specified by user or defaults or from metadata
         self.settings = settings
@@ -115,10 +114,7 @@ class TelegramDumper(TelegramClient):
         """ Connect to the Telegram server and Authenticate. """
         sprint('Connecting to Telegram servers...')
         if not self.connect():
-            sprint('Initial connection failed. Retrying...')
-            if not self.connect():
-                sprint('Could not connect to Telegram servers.')
-                return
+            sprint('Initial connection failed.')
 
         # Then, ensure we're authorized and have access
         if not self.is_user_authorized():

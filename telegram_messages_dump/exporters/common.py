@@ -34,7 +34,7 @@ class common(object):
                     name = name.strip()
                 if not name:
                     name = '???'
-            is_sent_by_bot = sender.bot
+            is_sent_by_bot = getattr(sender, 'bot', None)
         else:
             name = '???'
 
