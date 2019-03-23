@@ -1,3 +1,4 @@
+# pylint: disable=missing-docstring
 from setuptools import setup
 from telegram_messages_dump import __version__
 

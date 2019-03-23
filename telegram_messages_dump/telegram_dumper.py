@@ -13,8 +13,11 @@ import logging
 from collections import deque
 from getpass import getpass
 from time import sleep
-from telethon import TelegramClient, sync
-from telethon.errors import FloodWaitError, SessionPasswordNeededError, UsernameNotOccupiedError, UsernameInvalidError
+from telethon import TelegramClient, sync # pylint: disable=unused-import
+from telethon.errors import (FloodWaitError,
+                             SessionPasswordNeededError,
+                             UsernameNotOccupiedError,
+                             UsernameInvalidError)
 from telethon.tl.functions.contacts import ResolveUsernameRequest
 from telegram_messages_dump.utils import sprint
 from telegram_messages_dump.utils import JOIN_CHAT_PREFIX_URL
@@ -33,6 +36,7 @@ class TelegramDumper(TelegramClient):
         super().__init__(session_user_id,
                          settings.api_id,
                          settings.api_hash,
+                         timeout=40, #seconds
                          proxy=None)
 
         # Settings as specified by user or defaults or from metadata
