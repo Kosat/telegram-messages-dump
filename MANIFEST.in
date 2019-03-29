@@ -1,6 +1,7 @@
 exclude .gitignore
 exclude .coverage
 exclude .travis.yml
+exclude .vscode
 include README.md
 exclude setup.cfg
 prune .cache

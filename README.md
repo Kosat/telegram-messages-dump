@@ -4,6 +4,10 @@
 
 This is a simple console tool for dumping message history from a Telegram chat into a __jsonl__, __csv__ or plain __text__ file. 
 ## Installation
+**From PyPI:**
+```
+pip install telegram-messages-dump
+```
 **From sources:**
 Fetch the latest sources with git:
 ```
