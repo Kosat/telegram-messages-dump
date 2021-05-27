@@ -39,9 +39,9 @@ class common(object):
             name = '???'
 
         caption = None
-        if hasattr(msg, 'message'):
+        if hasattr(msg, 'message') and msg.message is not None:
             content = msg.message
-        elif hasattr(msg, 'action'):
+        elif hasattr(msg, 'action') and msg.action is not None:
             content = str(msg.action)
         else:
             # Unknown message, simply print its class name
