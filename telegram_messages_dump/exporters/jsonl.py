@@ -39,6 +39,7 @@ class jsonl(object):
             'sent_by_bot': is_sent_by_bot,
             'date': msg.date,
             'content': content,
+            'views': msg.views,
             'contains_media': is_contains_media,
             'media_content': media_content
         }
