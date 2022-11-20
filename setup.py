@@ -22,7 +22,7 @@ setup(
     author_email='kostikkv@gmail.com',
     url='https://github.com/Kosat/telegram-messages-dump',
     download_url='https://github.com/Kosat/telegram-messages-dump/releases',
-    install_requires=['telethon==1.6.2'],
+    install_requires=['tulir-telethon'],
     license="MIT",
     packages=['telegram_messages_dump', "telegram_messages_dump.exporters"],
     include_package_data=True,
